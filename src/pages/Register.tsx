@@ -6,57 +6,22 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import Input from '../components/Input'
 import Button from '../components/Button'
 import { MdEmail, MdLock, MdPeople } from 'react-icons/md'
-import { formatValidationErrors } from '../utils/utils'
+import { formatValidationErrors, handleErrors } from '../utils/utils'
 import Alert from '../components/Alert'
 import { useSetRecoilState } from 'recoil'
 import { userState } from '../state/userState'
 import { useHistory } from 'react-router-dom'
-
-const REGISTER = gql`
-  mutation($input: RegisterPayload!) {
-    register(input: $input) {
-      token
-      user {
-        id
-        username
-        display_name
-        email
-        created_at
-        updated_at
-      }
-    }
-  }
-`
-
-const schema = yup.object().shape({
-  username: yup
-    .string()
-    .trim()
-    .matches(
-      /^[\w\s]{2,30}$/,
-      'The username should only contains alphanumeric characters and should have a length between 2 to 30'
-    )
-    .required(),
-  email: yup.string().trim().email().required(),
-  display_name: yup
-    .string()
-    .trim()
-    .matches(
-      /^[\w\s]{2,30}$/,
-      'The display name should only contains alphanumeric characters and should have a length between 2 to 30'
-    )
-    .required(),
-  password: yup.string().min(6).required(),
-})
+import { REGISTER } from '../graphql/auth/mutations'
+import { registerSchema } from '../validations/auth/schema'
 
 const Register = () => {
   const setUser = useSetRecoilState(userState)
 
   const [registerMutation, { loading }] = useMutation(REGISTER)
   const { register, handleSubmit, errors } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(registerSchema),
   })
-  const [serverErrors, setServerErrors] = useState([])
+  const [serverErrors, setServerErrors] = useState<any>([])
   const history = useHistory()
 
   const registerUser = async (formData: any) => {
@@ -73,21 +38,8 @@ const Register = () => {
       localStorage.setItem('token', token)
       setUser(user)
       history.push('/')
-
-      console.log('data', res.data)
     } catch (e) {
-      if (e instanceof ApolloError) {
-        if (
-          e.graphQLErrors &&
-          e.graphQLErrors[0].message === 'Argument Validation Error'
-        ) {
-          setServerErrors(formatValidationErrors(e.graphQLErrors))
-        } else {
-          setServerErrors([].concat(e as any))
-        }
-      } else {
-        setServerErrors([].concat(e as any))
-      }
+      setServerErrors(handleErrors(e))
     }
   }
 

@@ -1,3 +1,5 @@
+import { ApolloError } from '@apollo/client'
+
 export const formatValidationErrors = (errors: any) => {
   let newErrors: any = []
   if (errors[0].message !== 'Argument Validation Error') {
@@ -15,4 +17,21 @@ export const formatValidationErrors = (errors: any) => {
   })
 
   return newErrors
+}
+
+export const handleErrors = (e: any) => {
+  let errors = []
+  if (e instanceof ApolloError) {
+    if (
+      e.graphQLErrors &&
+      e.graphQLErrors[0].message === 'Argument Validation Error'
+    ) {
+      errors.push(formatValidationErrors(e.graphQLErrors))
+    } else {
+      errors.push(e)
+    }
+  } else {
+    errors.push(e)
+  }
+  return errors
 }
