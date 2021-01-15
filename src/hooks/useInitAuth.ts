@@ -45,6 +45,7 @@ export const useInitAuth = () => {
   useEffect(() => {
     if (error) {
       localStorage.removeItem('token')
+      setUser(null)
       setInit(false)
     }
   }, [error])
