@@ -1,22 +1,30 @@
 import React from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch } from 'react-router-dom'
+import Navbar from './components/Navbar'
+import PrivateRoute from './components/PrivateRoute'
+import PublicRoute from './components/PublicRoute'
+import { useInitAuth } from './hooks/useInitAuth'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 
 function App() {
+  const { init } = useInitAuth()
+
+  if (init) return <div>Loading...</div>
+
   return (
     <Router>
       <Switch>
-        <Route exact path="/login">
+        <PublicRoute exact path="/login">
           <Login />
-        </Route>
-        <Route exact path="/register">
+        </PublicRoute>
+        <PublicRoute exact path="/register">
           <Register />
-        </Route>
-        <Route exact path="/">
+        </PublicRoute>
+        <PrivateRoute exact path="/">
           <Home />
-        </Route>
+        </PrivateRoute>
       </Switch>
     </Router>
   )
