@@ -15,3 +15,19 @@ export const REGISTER = gql`
     }
   }
 `
+
+export const LOGIN = gql`
+  mutation($input: LoginPayload!) {
+    login(input: $input) {
+      token
+      user {
+        id
+        username
+        display_name
+        email
+        created_at
+        updated_at
+      }
+    }
+  }
+`

@@ -19,7 +19,8 @@ module.exports = {
         
       },
       height: {
-        navbar: '68px'
+        navbar: '68px',
+        withoutNavbar: 'calc(100vh - 68px)'
       },
       width: {
         authContainer: "500px"

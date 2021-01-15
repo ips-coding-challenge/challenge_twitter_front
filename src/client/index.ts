@@ -1,19 +1,16 @@
 import { ApolloClient, from, HttpLink, InMemoryCache } from '@apollo/client'
-import { onError } from '@apollo/client/link/error'
-import { formatValidationErrors } from '../utils/utils'
+import { setContext } from '@apollo/client/link/context'
 
-const link = onError(({ graphQLErrors, networkError, forward, operation }) => {
-  if (graphQLErrors) {
-    // if (graphQLErrors[0].message === 'Argument Validation Error') {
-    //    formatValidationErrors(graphQLErrors)
-    // }
-    // graphQLErrors.map(({ message, locations, path, extensions }) =>
-    //   console.log(
-    //     `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-    //   )
-    // )
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('token')
+
+  if (token) {
+    return {
+      headers: {
+        authorization: 'Bearer ' + token,
+      },
+    }
   }
-  if (networkError) console.log(`[Network error]: ${networkError}`)
 })
 
 const httpLink = new HttpLink({
@@ -21,7 +18,7 @@ const httpLink = new HttpLink({
 })
 
 const client = new ApolloClient({
-  link: from([link, httpLink]),
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 })
 

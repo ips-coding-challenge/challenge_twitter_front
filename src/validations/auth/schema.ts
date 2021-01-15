@@ -20,3 +20,8 @@ export const registerSchema = yup.object().shape({
     .required(),
   password: yup.string().min(6).required(),
 })
+
+export const loginSchema = yup.object().shape({
+  email: yup.string().trim().email().required(),
+  password: yup.string().required(),
+})

@@ -1,17 +1,17 @@
-import { ApolloError, gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
+import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import Input from '../components/Input'
-import Button from '../components/Button'
 import { MdEmail, MdLock, MdPeople } from 'react-icons/md'
-import { formatValidationErrors, handleErrors } from '../utils/utils'
-import Alert from '../components/Alert'
-import { useSetRecoilState } from 'recoil'
-import { userState } from '../state/userState'
 import { useHistory } from 'react-router-dom'
+import { useSetRecoilState } from 'recoil'
+import Alert from '../components/Alert'
+import Button from '../components/Button'
+import Input from '../components/Input'
+import Layout from '../components/Layout'
 import { REGISTER } from '../graphql/auth/mutations'
+import { userState } from '../state/userState'
+import { handleErrors } from '../utils/utils'
 import { registerSchema } from '../validations/auth/schema'
 
 const Register = () => {
@@ -44,7 +44,7 @@ const Register = () => {
   }
 
   return (
-    <div className="w-full p-4 md:w-authContainer md:mx-auto h-screen flex flex-col justify-center items-center">
+    <Layout>
       <h1 className="text-3xl mb-4 font-bold">Register</h1>
       <form className="w-full" onSubmit={handleSubmit(registerUser)}>
         {serverErrors.length > 0 && (
@@ -95,7 +95,7 @@ const Register = () => {
           variant="primary"
         />
       </form>
-    </div>
+    </Layout>
   )
 }
 
