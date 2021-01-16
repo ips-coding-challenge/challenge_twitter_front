@@ -7,7 +7,7 @@ export type TweetType = {
   commentsCount: number
   retweetsCount: number
   type: 'tweet' | 'retweet' | 'comment'
-  parent: TweetType
+  parent?: TweetType
   media?: string
   visibility: 'public' | 'follower'
   created_at: string
@@ -18,5 +18,6 @@ export type UserType = {
   id: number
   username: string
   display_name: string
+  email?: string
   avatar?: string
 }
