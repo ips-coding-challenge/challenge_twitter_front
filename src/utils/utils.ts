@@ -1,4 +1,5 @@
 import { ApolloError } from '@apollo/client'
+import { format } from 'date-fns'
 
 export const formatValidationErrors = (errors: any) => {
   let newErrors: any = []
@@ -34,4 +35,24 @@ export const handleErrors = (e: any) => {
     errors.push(e)
   }
   return errors
+}
+
+export const avatarInitials = (display_name: string) => {
+  const split = display_name.split(' ')
+  if (split.length === 1) {
+    return display_name.slice(0, 2).toUpperCase()
+  } else {
+    return `${split[0].slice(0, 1)}${split[1].slice(0, 1)}`.toUpperCase()
+  }
+}
+
+export const formattedDate = (date: string): string => {
+  return format(new Date(date), "d MMMM 'at' HH:mm")
+}
+
+export const pluralize = (count: number, str: string): string => {
+  if (count > 0) {
+    str += 's'
+  }
+  return `${count} ${str}`
 }
