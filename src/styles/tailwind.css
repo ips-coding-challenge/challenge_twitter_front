@@ -8,6 +8,21 @@
 /* Stop purging. */
 
 /* Your own custom component styles */
+.menu {
+  @apply hover:text-primary relative flex items-center h-full;
+}
+.menu:hover::after {
+  content: '';
+  @apply bg-primary absolute h-1 bottom-0 left-0 right-0 rounded-tl-lg rounded-tr-lg;
+}
+.selected {
+  @apply text-primary relative flex items-center h-full;
+}
+
+.selected::after {
+  content: '';
+  @apply bg-primary absolute h-1 bottom-0 left-0 right-0 rounded-tl-lg rounded-tr-lg;
+}
 
 /* Start purging... */
 @tailwind utilities;

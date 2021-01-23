@@ -13,6 +13,7 @@ module.exports = {
         gray3: "#FAFAFA",
         gray4: "#BDBDBD",
         gray5: "#4F4F4F",
+        gray6: "#E0E0E0",
         red1: "#EB5757",
         green2: "#27AE60",
         blue2: "#2D9CDB",
@@ -25,14 +26,19 @@ module.exports = {
       width: {
         authContainer: "500px",
         tweetContainer: "745px",
-        sidebarWidth: "306px"
+        sidebarWidth: "306px",
+        menuDropdown: "190px"
       },
       maxWidth: {
         container: "1120px"
       }
     }
   },
-  variants: {},
+  variants: {
+    extend: {
+      backgroundColor: ['active','group-hover']
+    }
+  },
   plugins: [],
   purge: {
     // Filenames to scan for classes
