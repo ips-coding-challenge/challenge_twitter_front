@@ -48,41 +48,43 @@ const Login = () => {
 
   return (
     <Layout>
-      <h1 className="text-3xl mb-4 font-bold">Login</h1>
-      <form className="w-full" onSubmit={handleSubmit(loginUser)}>
-        {serverErrors.length > 0 && (
-          <div className="mb-4">
-            {serverErrors.map((e: any) => (
-              <Alert variant="danger" message={e.message} />
-            ))}
-          </div>
-        )}
+      <div className="w-full md:w-authContainer h-full container mx-auto p-4 flex flex-col justify-center items-center">
+        <h1 className="text-3xl mb-4 font-bold">Login</h1>
+        <form className="w-full" onSubmit={handleSubmit(loginUser)}>
+          {serverErrors.length > 0 && (
+            <div className="mb-4">
+              {serverErrors.map((e: any) => (
+                <Alert variant="danger" message={e.message} />
+              ))}
+            </div>
+          )}
 
-        <Input
-          label="Enter your email"
-          name="email"
-          type="email"
-          icon={<MdEmail />}
-          ref={register}
-          error={errors.email?.message}
-        />
+          <Input
+            label="Enter your email"
+            name="email"
+            type="email"
+            icon={<MdEmail />}
+            ref={register}
+            error={errors.email?.message}
+          />
 
-        <Input
-          label="Enter your password"
-          name="password"
-          type="password"
-          icon={<MdLock />}
-          ref={register}
-          error={errors.password?.message}
-        />
+          <Input
+            label="Enter your password"
+            name="password"
+            type="password"
+            icon={<MdLock />}
+            ref={register}
+            error={errors.password?.message}
+          />
 
-        <Button
-          disabled={loading}
-          type="submit"
-          text="Login"
-          variant="primary"
-        />
-      </form>
+          <Button
+            disabled={loading}
+            type="submit"
+            text="Login"
+            variant="primary"
+          />
+        </form>
+      </div>
     </Layout>
   )
 }
