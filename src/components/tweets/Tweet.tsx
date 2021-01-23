@@ -1,18 +1,12 @@
 import React from 'react'
-import { TweetType, UserType } from '../../types/types'
+import { MdBookmarkBorder, MdLoop, MdModeComment } from 'react-icons/md'
+import { useRecoilValue } from 'recoil'
+import { userState } from '../../state/userState'
+import { TweetType } from '../../types/types'
 import { formattedDate, pluralize } from '../../utils/utils'
 import Avatar from '../Avatar'
 import Button from '../Button'
-import {
-  MdBookmarkBorder,
-  MdFavoriteBorder,
-  MdLoop,
-  MdModeComment,
-} from 'react-icons/md'
-import { gql, useMutation } from '@apollo/client'
-import { TOGGLE_LIKE } from '../../graphql/tweets/mutations'
-import { useRecoilValue } from 'recoil'
-import { userState } from '../../state/userState'
+import IsLikedButton from './actions/IsLikedButton'
 
 type TweetProps = {
   tweet: TweetType
@@ -20,34 +14,6 @@ type TweetProps = {
 
 const Tweet = ({ tweet }: TweetProps) => {
   const user = useRecoilValue(userState)
-  const [toggleLike, { error }] = useMutation(TOGGLE_LIKE, {
-    variables: {
-      tweet_id: tweet.id,
-    },
-    update(cache, { data: { toggleLike } }) {
-      console.log('cache', cache)
-      cache.modify({
-        fields: {
-          feed(tweets: TweetType[]) {
-            // console.log('tweets', tweets)
-            const newTweetRef = cache.writeFragment({
-              data: toggleLike,
-              fragment: gql`
-                fragment NewTweet on Tweet {
-                  id
-                  isLiked
-                }
-              `,
-            })
-
-            // console.log('newTweetRef', newTweetRef)
-
-            return [...tweets, newTweetRef]
-          },
-        },
-      })
-    },
-  })
 
   const showRetweet = () => {
     if (tweet.user.id === user!.id) {
@@ -107,14 +73,9 @@ const Tweet = ({ tweet }: TweetProps) => {
           icon={<MdLoop />}
           alignment="left"
         />
-        <Button
-          text={`${tweet.isLiked ? 'Liked' : 'Likes'}`}
-          variant={`${tweet.isLiked ? 'active' : 'default'}`}
-          className={`text-sm`}
-          onClick={() => toggleLike()}
-          icon={<MdFavoriteBorder />}
-          alignment="left"
-        />
+
+        <IsLikedButton id={tweet.id} />
+
         <Button
           text="Saved"
           variant="default"
