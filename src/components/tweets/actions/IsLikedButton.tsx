@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client'
 import React from 'react'
-import { MdFavoriteBorder } from 'react-icons/md'
+import { MdFavorite, MdFavoriteBorder } from 'react-icons/md'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { TOGGLE_LIKE } from '../../../graphql/tweets/mutations'
 import { isLikedState } from '../../../state/tweetsState'
@@ -25,10 +25,11 @@ const IsLikedButton = ({ id }: IsLIkedButtonProps) => {
     <Button
       text={`${isLiked ? 'Liked' : 'Likes'}`}
       variant={`${isLiked ? 'active' : 'default'}`}
-      className={`text-sm`}
+      className={`text-lg md:text-sm`}
       onClick={() => toggleLike()}
-      icon={<MdFavoriteBorder />}
+      icon={isLiked ? <MdFavorite /> : <MdFavoriteBorder />}
       alignment="left"
+      hideTextOnMobile={true}
     />
   )
 }
