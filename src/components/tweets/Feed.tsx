@@ -18,7 +18,7 @@ const Feed = () => {
 
   if (loading) return <div>Loading...</div>
   return (
-    <div className="w-full">
+    <div className="w-full pb-4 md:pb-0">
       {tweets.length > 0 && (
         <ul>
           {tweets.map((t: TweetType) => (

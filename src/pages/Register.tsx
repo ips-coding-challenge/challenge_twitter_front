@@ -45,56 +45,58 @@ const Register = () => {
 
   return (
     <Layout>
-      <h1 className="text-3xl mb-4 font-bold">Register</h1>
-      <form className="w-full" onSubmit={handleSubmit(registerUser)}>
-        {serverErrors.length > 0 && (
-          <div className="mb-4">
-            {serverErrors.map((e: any) => (
-              <Alert variant="danger" message={e.message} />
-            ))}
-          </div>
-        )}
-        <Input
-          label="Enter your username"
-          name="username"
-          icon={<MdPeople />}
-          ref={register}
-          error={errors.username?.message}
-        />
+      <div className="w-full md:w-authContainer h-full container mx-auto p-4 flex flex-col justify-center items-center">
+        <h1 className="text-3xl mb-4 font-bold">Register</h1>
+        <form className="w-full" onSubmit={handleSubmit(registerUser)}>
+          {serverErrors.length > 0 && (
+            <div className="mb-4">
+              {serverErrors.map((e: any) => (
+                <Alert variant="danger" message={e.message} />
+              ))}
+            </div>
+          )}
+          <Input
+            label="Enter your username"
+            name="username"
+            icon={<MdPeople />}
+            ref={register}
+            error={errors.username?.message}
+          />
 
-        <Input
-          label="Enter your Display Name"
-          name="display_name"
-          icon={<MdPeople />}
-          ref={register}
-          error={errors.display_name?.message}
-        />
+          <Input
+            label="Enter your Display Name"
+            name="display_name"
+            icon={<MdPeople />}
+            ref={register}
+            error={errors.display_name?.message}
+          />
 
-        <Input
-          label="Enter your email"
-          name="email"
-          type="email"
-          icon={<MdEmail />}
-          ref={register}
-          error={errors.email?.message}
-        />
+          <Input
+            label="Enter your email"
+            name="email"
+            type="email"
+            icon={<MdEmail />}
+            ref={register}
+            error={errors.email?.message}
+          />
 
-        <Input
-          label="Enter your password"
-          name="password"
-          type="password"
-          icon={<MdLock />}
-          ref={register}
-          error={errors.password?.message}
-        />
+          <Input
+            label="Enter your password"
+            name="password"
+            type="password"
+            icon={<MdLock />}
+            ref={register}
+            error={errors.password?.message}
+          />
 
-        <Button
-          disabled={loading}
-          type="submit"
-          text="Register"
-          variant="primary"
-        />
-      </form>
+          <Button
+            disabled={loading}
+            type="submit"
+            text="Register"
+            variant="primary"
+          />
+        </form>
+      </div>
     </Layout>
   )
 }

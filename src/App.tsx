@@ -1,6 +1,5 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch } from 'react-router-dom'
-import Navbar from './components/Navbar'
 import PrivateRoute from './components/PrivateRoute'
 import PublicRoute from './components/PublicRoute'
 import { useInitAuth } from './hooks/useInitAuth'

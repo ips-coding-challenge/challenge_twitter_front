@@ -6,6 +6,7 @@ type ButtonProps = {
   icon?: JSX.Element
   alignment?: 'left' | 'right'
   className?: string
+  hideTextOnMobile?: boolean
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
 const classes: any = {
@@ -20,6 +21,7 @@ const Button = ({
   icon,
   alignment = 'left',
   className,
+  hideTextOnMobile = false,
   ...rest
 }: ButtonProps) => {
   return (
@@ -28,7 +30,9 @@ const Button = ({
       {...rest}
     >
       {icon && alignment === 'left' && <div className="mr-2">{icon}</div>}
-      {text}
+      <div className={`${hideTextOnMobile ? 'hidden md:block' : ''}`}>
+        {text}
+      </div>
       {icon && alignment === 'right' && <div className="ml-2">{icon}</div>}
     </button>
   )

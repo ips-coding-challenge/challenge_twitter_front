@@ -62,16 +62,18 @@ const Tweet = ({ tweet }: TweetProps) => {
         <Button
           text="Comments"
           variant="default"
-          className="text-sm"
+          className="text-lg md:text-sm"
           icon={<MdModeComment />}
           alignment="left"
+          hideTextOnMobile={true}
         />
         <Button
           text="Retweets"
           variant="default"
-          className="text-sm"
+          className="text-lg md:text-sm"
           icon={<MdLoop />}
           alignment="left"
+          hideTextOnMobile={true}
         />
 
         <IsLikedButton id={tweet.id} />
@@ -79,9 +81,10 @@ const Tweet = ({ tweet }: TweetProps) => {
         <Button
           text="Saved"
           variant="default"
-          className="text-sm"
+          className="text-lg md:text-sm"
           icon={<MdBookmarkBorder />}
           alignment="left"
+          hideTextOnMobile={true}
         />
       </div>
     </div>
