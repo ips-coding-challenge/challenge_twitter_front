@@ -7,7 +7,8 @@ import { formattedDate, pluralize } from '../../utils/utils'
 import Avatar from '../Avatar'
 import Button from '../Button'
 import IsLikedButton from './actions/IsLikedButton'
-
+import nl2br from 'react-nl2br'
+import reactStringReplace from 'react-string-replace'
 type TweetProps = {
   tweet: TweetType
 }
@@ -21,6 +22,28 @@ const Tweet = ({ tweet }: TweetProps) => {
     } else {
       return <div>{tweet.user.display_name} retweeted</div>
     }
+  }
+
+  const renderParsedTweet = () => {
+    let replacedText
+
+    // Match URLs
+    replacedText = reactStringReplace(
+      nl2br(tweet.body),
+      /(https?:\/\/\S+)/g,
+      (match, i) => (
+        <a key={match + i} href={match}>
+          {match}
+        </a>
+      )
+    )
+    // Match hashtags
+    replacedText = reactStringReplace(replacedText, /#(\w+)/g, (match, i) => (
+      <a key={match + i} href={`/hashtag/${match}`}>
+        #{match}
+      </a>
+    ))
+    return replacedText
   }
 
   return (
@@ -43,7 +66,7 @@ const Tweet = ({ tweet }: TweetProps) => {
       {tweet.media && <img src={tweet.media} alt="tweet media" />}
       {/* Body */}
       <div>
-        <p className="mt-6 text-gray5">{tweet.body}</p>
+        <p className="mt-6 text-gray5">{renderParsedTweet()}</p>
       </div>
 
       {/* Metadata */}

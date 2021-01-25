@@ -5,7 +5,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { ADD_TWEET } from '../../graphql/tweets/mutations'
 import { tweetsState } from '../../state/tweetsState'
 import { userState } from '../../state/userState'
-import { parseTweet } from '../../utils/utils'
+import { extractMetadata, shortenURLS } from '../../utils/utils'
 import { addTweetSchema } from '../../validations/tweets/schema'
 import Avatar from '../Avatar'
 import Button from '../Button'
@@ -17,17 +17,29 @@ const TweetForm = forwardRef((props, ref) => {
   const [addTweetMutation, { loading, error, data }] = useMutation(ADD_TWEET)
 
   const addTweet = async () => {
-    const { hashtags, url } = parseTweet(body)
+    // Parse the tweet
+    const { hashtags, urls } = await extractMetadata(body)
 
-    console.log('hashtags, url', hashtags, url)
+    // Shorten the urls
+    let shortenedURLS: any
+    let newBody = null
+    if (urls && urls.length > 0) {
+      shortenedURLS = await shortenURLS(urls)
+      shortenedURLS.forEach((el: any) => {
+        // Need to escape characters from the url to replace
+        const pattern = el.original.replace(/[^a-zA-Z0-9]/g, '\\$&')
+        newBody = body.replace(new RegExp(pattern), el.shorten)
+      })
+    }
+
     try {
-      await addTweetSchema.validate({ body, hashtags, url })
+      await addTweetSchema.validate({ body, hashtags, shortenedURLS })
       await addTweetMutation({
         variables: {
           payload: {
-            body,
+            body: newBody ?? body,
             hashtags,
-            url,
+            url: shortenedURLS[0].shorten,
           },
         },
       })

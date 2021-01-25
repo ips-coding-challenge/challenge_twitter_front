@@ -1,5 +1,8 @@
 import { ApolloError } from '@apollo/client'
 import { format } from 'date-fns'
+import reactStringReplace from 'react-string-replace'
+//@ts-ignore
+import TinyURL from 'tinyurl'
 
 export const formatValidationErrors = (errors: any) => {
   let newErrors: any = []
@@ -57,18 +60,10 @@ export const pluralize = (count: number, str: string): string => {
   return `${count} ${str}`
 }
 // Parse the tweet to extract hashtags and the first url ( for the link's preview )
-export const parseTweet = (body: string) => {
+export const extractMetadata = async (body: string) => {
   let hashtags = body.match(/(#[\w]+)/g)
 
-  const urls = body.match(
-    /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/g
-  )
-
-  let url
-  // Only do a preview for the first link
-  if (urls && urls.length > 0) {
-    url = urls[0]
-  }
+  const urls = body.match(/https?:\/\/\S+/g)
 
   // Remove duplicates
   if (hashtags && hashtags?.length > 0) {
@@ -76,6 +71,20 @@ export const parseTweet = (body: string) => {
   }
   return {
     hashtags,
-    url,
+    urls,
   }
+}
+
+export const shortenURLS = async (
+  urls: string[]
+): Promise<{ original: string; shorten: string }[]> => {
+  const tinyURLS = []
+  for (let url of urls) {
+    const res = await TinyURL.shorten(url)
+    tinyURLS.push({
+      original: url,
+      shorten: res,
+    })
+  }
+  return tinyURLS
 }

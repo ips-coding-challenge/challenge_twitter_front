@@ -8,6 +8,9 @@
 /* Stop purging. */
 
 /* Your own custom component styles */
+a {
+  @apply text-primary hover:text-primary_hover;
+}
 .menu {
   @apply hover:text-primary relative flex items-center h-full;
 }

@@ -24,10 +24,13 @@
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.14.1",
     "react-icons": "^4.1.0",
+    "react-nl2br": "^1.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "react-string-replace": "^0.4.4",
     "recoil": "^0.1.2",
     "tailwindcss": "2.x",
+    "tinyurl": "^1.1.7",
     "typescript": "4.x",
     "yup": "^0.32.8"
   },
