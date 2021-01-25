@@ -9,6 +9,13 @@ export const ADD_TWEET = gql`
       retweetsCount
       commentsCount
       isLiked
+      preview {
+        id
+        url
+        title
+        description
+        image
+      }
       user {
         id
         username

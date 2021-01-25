@@ -19,6 +19,13 @@ export const FEED = gql`
           avatar
         }
       }
+      preview {
+        id
+        title
+        description
+        url
+        image
+      }
       isLiked
       type
       visibility

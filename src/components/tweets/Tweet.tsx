@@ -9,6 +9,7 @@ import Button from '../Button'
 import IsLikedButton from './actions/IsLikedButton'
 import nl2br from 'react-nl2br'
 import reactStringReplace from 'react-string-replace'
+import Preview from './Preview'
 type TweetProps = {
   tweet: TweetType
 }
@@ -31,11 +32,23 @@ const Tweet = ({ tweet }: TweetProps) => {
     replacedText = reactStringReplace(
       nl2br(tweet.body),
       /(https?:\/\/\S+)/g,
-      (match, i) => (
-        <a key={match + i} href={match}>
-          {match}
-        </a>
-      )
+      (match, i) => {
+        if (tweet.preview && match === tweet.preview.url) {
+          console.log('in here', tweet.preview)
+          return <Preview key={tweet.preview.id} preview={tweet.preview} />
+        } else {
+          return (
+            <a
+              className="text-primary hover:text-primary_hover"
+              key={match + i}
+              href={match}
+            >
+              {match}
+            </a>
+          )
+        }
+        // If match is equal to the preview url
+      }
     )
     // Match hashtags
     replacedText = reactStringReplace(replacedText, /#(\w+)/g, (match, i) => (
@@ -65,9 +78,7 @@ const Tweet = ({ tweet }: TweetProps) => {
       {/* Media? */}
       {tweet.media && <img src={tweet.media} alt="tweet media" />}
       {/* Body */}
-      <div>
-        <p className="mt-6 text-gray5">{renderParsedTweet()}</p>
-      </div>
+      <div className="mt-6 text-gray5">{renderParsedTweet()}</div>
 
       {/* Metadata */}
       <div className="flex justify-end mt-6">

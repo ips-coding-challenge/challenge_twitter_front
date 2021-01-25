@@ -1,5 +1,7 @@
 import { gql, useMutation } from '@apollo/client'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { forwardRef, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { MdImage, MdPublic } from 'react-icons/md'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { ADD_TWEET } from '../../graphql/tweets/mutations'
@@ -22,13 +24,13 @@ const TweetForm = forwardRef((props, ref) => {
 
     // Shorten the urls
     let shortenedURLS: any
-    let newBody = null
+    let newBody = body.slice()
     if (urls && urls.length > 0) {
       shortenedURLS = await shortenURLS(urls)
       shortenedURLS.forEach((el: any) => {
         // Need to escape characters from the url to replace
         const pattern = el.original.replace(/[^a-zA-Z0-9]/g, '\\$&')
-        newBody = body.replace(new RegExp(pattern), el.shorten)
+        newBody = newBody.replace(new RegExp(pattern), el.shorten)
       })
     }
 
