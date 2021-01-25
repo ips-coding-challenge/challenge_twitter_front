@@ -5,6 +5,7 @@ import { FEED } from '../../graphql/tweets/queries'
 import { tweetsState } from '../../state/tweetsState'
 import { TweetType } from '../../types/types'
 import Tweet from './Tweet'
+import TweetForm from './TweetForm'
 
 const Feed = () => {
   const [tweets, setTweets] = useRecoilState(tweetsState)
@@ -19,6 +20,7 @@ const Feed = () => {
   if (loading) return <div>Loading...</div>
   return (
     <div className="w-full pb-4 md:pb-0">
+      <TweetForm />
       {tweets.length > 0 && (
         <ul>
           {tweets.map((t: TweetType) => (

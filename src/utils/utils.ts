@@ -56,3 +56,26 @@ export const pluralize = (count: number, str: string): string => {
   }
   return `${count} ${str}`
 }
+// Parse the tweet to extract hashtags and the first url ( for the link's preview )
+export const parseTweet = (body: string) => {
+  let hashtags = body.match(/(#[\w]+)/g)
+
+  const urls = body.match(
+    /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/g
+  )
+
+  let url
+  // Only do a preview for the first link
+  if (urls && urls.length > 0) {
+    url = urls[0]
+  }
+
+  // Remove duplicates
+  if (hashtags && hashtags?.length > 0) {
+    hashtags = Array.from(new Set(hashtags))
+  }
+  return {
+    hashtags,
+    url,
+  }
+}
