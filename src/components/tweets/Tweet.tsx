@@ -7,7 +7,9 @@ import { formattedDate, pluralize } from '../../utils/utils'
 import Avatar from '../Avatar'
 import Button from '../Button'
 import IsLikedButton from './actions/IsLikedButton'
-
+import nl2br from 'react-nl2br'
+import reactStringReplace from 'react-string-replace'
+import Preview from './Preview'
 type TweetProps = {
   tweet: TweetType
 }
@@ -21,6 +23,42 @@ const Tweet = ({ tweet }: TweetProps) => {
     } else {
       return <div>{tweet.user.display_name} retweeted</div>
     }
+  }
+
+  const renderParsedTweet = () => {
+    let replacedText
+
+    // Match URLs
+    replacedText = reactStringReplace(
+      nl2br(tweet.body),
+      /(https?:\/\/\S+)/g,
+      (match, i) => {
+        if (tweet.preview && match === tweet.preview.url) {
+          return <Preview key={tweet.preview.id} preview={tweet.preview} />
+        } else {
+          return (
+            <a
+              className="text-primary hover:text-primary_hover"
+              key={match + i}
+              href={match}
+            >
+              {match}
+            </a>
+          )
+        }
+      }
+    )
+    // Match hashtags
+    replacedText = reactStringReplace(replacedText, /#(\w+)/g, (match, i) => (
+      <a
+        className="font-bold hover:text-gray-500 transition-colors duration-300"
+        key={match + i}
+        href={`/hashtag/${match}`}
+      >
+        #{match}
+      </a>
+    ))
+    return replacedText
   }
 
   return (
@@ -42,9 +80,7 @@ const Tweet = ({ tweet }: TweetProps) => {
       {/* Media? */}
       {tweet.media && <img src={tweet.media} alt="tweet media" />}
       {/* Body */}
-      <div>
-        <p className="mt-6 text-gray5">{tweet.body}</p>
-      </div>
+      <div className="mt-6 text-gray5">{renderParsedTweet()}</div>
 
       {/* Metadata */}
       <div className="flex justify-end mt-6">

@@ -6,6 +6,7 @@ export type TweetType = {
   likesCount: number
   commentsCount: number
   retweetsCount: number
+  preview: PreviewType
   type: 'tweet' | 'retweet' | 'comment'
   parent?: TweetType
   media?: string
@@ -20,4 +21,12 @@ export type UserType = {
   display_name: string
   email?: string
   avatar?: string
+}
+
+export type PreviewType = {
+  id: number
+  title: string
+  url: string
+  description?: string
+  image?: string
 }

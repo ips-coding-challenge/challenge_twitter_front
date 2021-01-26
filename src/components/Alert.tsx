@@ -9,8 +9,9 @@ type AlertProps = {
 }
 
 const Alert = ({ variant, message }: AlertProps) => {
+  console.log('message', message)
   return (
-    <div className={`${classes[variant]} px-4 py-2 w-full rounded`}>
+    <div className={`${classes[variant]} px-4 py-2 w-full rounded text-sm`}>
       {message}
     </div>
   )

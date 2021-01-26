@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch } from 'react-router-dom'
+import BasicLoader from './components/loaders/BasicLoader'
 import PrivateRoute from './components/PrivateRoute'
 import PublicRoute from './components/PublicRoute'
 import { useInitAuth } from './hooks/useInitAuth'
@@ -10,7 +11,7 @@ import Register from './pages/Register'
 function App() {
   const { init } = useInitAuth()
 
-  if (init) return <div>Loading...</div>
+  if (init) return <BasicLoader />
 
   return (
     <Router>

@@ -1,5 +1,7 @@
 import { ApolloError } from '@apollo/client'
 import { format } from 'date-fns'
+//@ts-ignore
+import TinyURL from 'tinyurl'
 
 export const formatValidationErrors = (errors: any) => {
   let newErrors: any = []
@@ -55,4 +57,33 @@ export const pluralize = (count: number, str: string): string => {
     str += 's'
   }
   return `${count} ${str}`
+}
+// Parse the tweet to extract hashtags and the first url ( for the link's preview )
+export const extractMetadata = async (body: string) => {
+  let hashtags = body.match(/(#[\w]+)/g)
+
+  const urls = body.match(/https?:\/\/\S+/g)
+
+  // Remove duplicates
+  if (hashtags && hashtags?.length > 0) {
+    hashtags = Array.from(new Set(hashtags))
+  }
+  return {
+    hashtags,
+    urls,
+  }
+}
+
+export const shortenURLS = async (
+  urls: string[]
+): Promise<{ original: string; shorten: string }[]> => {
+  const tinyURLS = []
+  for (let url of urls) {
+    const res = await TinyURL.shorten(url)
+    tinyURLS.push({
+      original: url,
+      shorten: res,
+    })
+  }
+  return tinyURLS
 }
