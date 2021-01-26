@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { TWEET_FRAGMENT } from './fragment'
+import { TWEET_FRAGMENT } from './fragments'
 
 export const ADD_TWEET = gql`
   mutation($payload: AddTweetPayload!) {

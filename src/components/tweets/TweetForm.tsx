@@ -1,7 +1,5 @@
-import { ApolloError, gql, useMutation } from '@apollo/client'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { ApolloError, useMutation } from '@apollo/client'
 import { forwardRef, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { MdImage, MdPublic } from 'react-icons/md'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { ValidationError } from 'yup'
@@ -14,7 +12,7 @@ import Alert from '../Alert'
 import Avatar from '../Avatar'
 import Button from '../Button'
 
-const TweetForm = forwardRef((props, ref) => {
+const TweetForm = () => {
   // Global state
   const user = useRecoilValue(userState)
   const setTweets = useSetRecoilState(tweetsState)
@@ -144,6 +142,6 @@ const TweetForm = forwardRef((props, ref) => {
       </div>
     </div>
   )
-})
+}
 
 export default TweetForm

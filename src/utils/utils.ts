@@ -1,6 +1,5 @@
 import { ApolloError } from '@apollo/client'
 import { format } from 'date-fns'
-import reactStringReplace from 'react-string-replace'
 //@ts-ignore
 import TinyURL from 'tinyurl'
 
