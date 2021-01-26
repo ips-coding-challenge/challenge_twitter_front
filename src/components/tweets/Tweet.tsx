@@ -34,7 +34,6 @@ const Tweet = ({ tweet }: TweetProps) => {
       /(https?:\/\/\S+)/g,
       (match, i) => {
         if (tweet.preview && match === tweet.preview.url) {
-          console.log('in here', tweet.preview)
           return <Preview key={tweet.preview.id} preview={tweet.preview} />
         } else {
           return (
@@ -47,12 +46,15 @@ const Tweet = ({ tweet }: TweetProps) => {
             </a>
           )
         }
-        // If match is equal to the preview url
       }
     )
     // Match hashtags
     replacedText = reactStringReplace(replacedText, /#(\w+)/g, (match, i) => (
-      <a key={match + i} href={`/hashtag/${match}`}>
+      <a
+        className="font-bold hover:text-gray-500 transition-colors duration-300"
+        key={match + i}
+        href={`/hashtag/${match}`}
+      >
         #{match}
       </a>
     ))

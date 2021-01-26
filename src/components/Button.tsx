@@ -7,6 +7,7 @@ type ButtonProps = {
   alignment?: 'left' | 'right'
   className?: string
   hideTextOnMobile?: boolean
+  loading?: boolean
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
 const classes: any = {
@@ -22,6 +23,7 @@ const Button = ({
   alignment = 'left',
   className,
   hideTextOnMobile = false,
+  loading = false,
   ...rest
 }: ButtonProps) => {
   return (
@@ -34,6 +36,8 @@ const Button = ({
         {text}
       </div>
       {icon && alignment === 'right' && <div className="ml-2">{icon}</div>}
+
+      {loading && <div className="loader loader-white ml-2"></div>}
     </button>
   )
 }

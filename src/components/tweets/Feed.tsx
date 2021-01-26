@@ -4,6 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import { FEED } from '../../graphql/tweets/queries'
 import { tweetsState } from '../../state/tweetsState'
 import { TweetType } from '../../types/types'
+import BasicLoader from '../loaders/BasicLoader'
 import Tweet from './Tweet'
 import TweetForm from './TweetForm'
 
@@ -17,7 +18,7 @@ const Feed = () => {
     }
   }, [data])
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <BasicLoader />
   return (
     <div className="w-full pb-4 md:pb-0">
       <TweetForm />
