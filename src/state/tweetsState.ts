@@ -25,3 +25,13 @@ export const isLikedState = atomFamily({
     },
   }),
 })
+
+export const isRetweetedState = atomFamily({
+  key: 'isRetweetedTweet',
+  default: selectorFamily({
+    key: 'isRetweetedSelector',
+    get: (id: number) => ({ get }) => {
+      return get(singleTweetState(id))?.isRetweeted
+    },
+  }),
+})

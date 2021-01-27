@@ -26,6 +26,7 @@ export const TWEET_FRAGMENT = gql`
       image
     }
     isLiked
+    isRetweeted
     type
     visibility
     user {

@@ -110,7 +110,6 @@ const TweetForm = () => {
         <div className="w-full">
           <div className="w-full mb-2">
             <textarea
-              rows={5}
               value={body}
               onChange={(e) => setBody(e.target.value)}
               className="w-full placeholder-gray4 p-2 "

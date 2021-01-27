@@ -15,3 +15,8 @@ export const TOGGLE_LIKE = gql`
     toggleLike(tweet_id: $tweet_id)
   }
 `
+export const TOGGLE_RETWEET = gql`
+  mutation($tweet_id: Float!) {
+    toggleRetweet(tweet_id: $tweet_id)
+  }
+`

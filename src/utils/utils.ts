@@ -53,7 +53,7 @@ export const formattedDate = (date: string): string => {
 }
 
 export const pluralize = (count: number, str: string): string => {
-  if (count > 0) {
+  if (count > 1) {
     str += 's'
   }
   return `${count} ${str}`
