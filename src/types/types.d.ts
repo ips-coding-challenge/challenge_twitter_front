@@ -2,7 +2,8 @@ export type TweetType = {
   id: number
   body: string
   user: UserType
-  isLiked?: boolean
+  isLiked: boolean
+  isRetweeted: boolean
   likesCount: number
   commentsCount: number
   retweetsCount: number

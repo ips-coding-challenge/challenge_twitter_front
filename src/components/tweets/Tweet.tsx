@@ -6,10 +6,12 @@ import { TweetType } from '../../types/types'
 import { formattedDate, pluralize } from '../../utils/utils'
 import Avatar from '../Avatar'
 import Button from '../Button'
-import IsLikedButton from './actions/IsLikedButton'
+import LikeButton from './actions/LikeButton'
 import nl2br from 'react-nl2br'
 import reactStringReplace from 'react-string-replace'
 import Preview from './Preview'
+import RetweetButton from './actions/RetweetButton'
+import TweetStats from './TweetStats'
 type TweetProps = {
   tweet: TweetType
 }
@@ -83,14 +85,7 @@ const Tweet = ({ tweet }: TweetProps) => {
       <div className="mt-6 text-gray5">{renderParsedTweet()}</div>
 
       {/* Metadata */}
-      <div className="flex justify-end mt-6">
-        <p className="text-gray4 text-xs ml-4">
-          {pluralize(tweet.commentsCount, 'Comment')}
-        </p>
-        <p className="text-gray4 text-xs ml-4">
-          {pluralize(tweet.retweetsCount, 'Retweet')}{' '}
-        </p>
-      </div>
+      <TweetStats id={tweet.id} />
 
       <hr className="my-2" />
       {/* Buttons */}
@@ -103,16 +98,9 @@ const Tweet = ({ tweet }: TweetProps) => {
           alignment="left"
           hideTextOnMobile={true}
         />
-        <Button
-          text="Retweets"
-          variant="default"
-          className="text-lg md:text-sm"
-          icon={<MdLoop />}
-          alignment="left"
-          hideTextOnMobile={true}
-        />
 
-        <IsLikedButton id={tweet.id} />
+        <RetweetButton id={tweet.id} />
+        <LikeButton id={tweet.id} />
 
         <Button
           text="Saved"
