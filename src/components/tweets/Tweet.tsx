@@ -12,6 +12,7 @@ import reactStringReplace from 'react-string-replace'
 import Preview from './Preview'
 import RetweetButton from './actions/RetweetButton'
 import TweetStats from './TweetStats'
+import BookmarkButton from './actions/BookmarkButton'
 type TweetProps = {
   tweet: TweetType
 }
@@ -101,15 +102,7 @@ const Tweet = ({ tweet }: TweetProps) => {
 
         <RetweetButton id={tweet.id} />
         <LikeButton id={tweet.id} />
-
-        <Button
-          text="Saved"
-          variant="default"
-          className="text-lg md:text-sm"
-          icon={<MdBookmarkBorder />}
-          alignment="left"
-          hideTextOnMobile={true}
-        />
+        <BookmarkButton id={tweet.id} />
       </div>
     </div>
   )
