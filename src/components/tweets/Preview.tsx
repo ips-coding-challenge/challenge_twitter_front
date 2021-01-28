@@ -1,8 +1,13 @@
+import { stopPropagation } from '../../utils/utils'
+
 const Preview = ({ preview }: any) => {
   return (
     <a
       href={preview.url}
       className="rounded shadow block p-3 hover:bg-gray3 transition-colors duration-300"
+      onClick={stopPropagation}
+      target="_blank"
+      rel="noopener, noreferrer"
     >
       {preview.image && (
         <img
