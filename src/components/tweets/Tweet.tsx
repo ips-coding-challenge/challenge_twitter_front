@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { MdBookmarkBorder, MdLoop, MdModeComment } from 'react-icons/md'
 import { useRecoilValue } from 'recoil'
 import { userState } from '../../state/userState'
@@ -13,12 +13,16 @@ import Preview from './Preview'
 import RetweetButton from './actions/RetweetButton'
 import TweetStats from './TweetStats'
 import BookmarkButton from './actions/BookmarkButton'
+import TweetForm, { TweetTypeEnum } from './TweetForm'
+
 type TweetProps = {
   tweet: TweetType
 }
 
 const Tweet = ({ tweet }: TweetProps) => {
   const user = useRecoilValue(userState)
+
+  const [showCommentForm, setShowCommentForm] = useState(false)
 
   const showRetweet = () => {
     if (tweet.user.id === user!.id) {
@@ -64,6 +68,10 @@ const Tweet = ({ tweet }: TweetProps) => {
     return replacedText
   }
 
+  const toggleCommentForm = (e: any) => {
+    setShowCommentForm((old) => (old = !old))
+  }
+
   return (
     <div className="p-4 shadow bg-white rounded mb-6">
       {/* Retweet */}
@@ -92,18 +100,23 @@ const Tweet = ({ tweet }: TweetProps) => {
       {/* Buttons */}
       <div className="flex justify-around">
         <Button
-          text="Comments"
+          text="Comment"
           variant="default"
           className="text-lg md:text-sm"
           icon={<MdModeComment />}
           alignment="left"
           hideTextOnMobile={true}
+          onClick={toggleCommentForm}
         />
 
         <RetweetButton id={tweet.id} />
         <LikeButton id={tweet.id} />
         <BookmarkButton id={tweet.id} />
       </div>
+
+      {showCommentForm && (
+        <TweetForm type={TweetTypeEnum.COMMENT} tweet_id={tweet.id} />
+      )}
     </div>
   )
 }
