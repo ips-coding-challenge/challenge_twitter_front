@@ -20,3 +20,9 @@ export const TOGGLE_RETWEET = gql`
     toggleRetweet(tweet_id: $tweet_id)
   }
 `
+
+export const TOGGLE_BOOKMARK = gql`
+  mutation($tweet_id: Float!) {
+    toggleBookmark(tweet_id: $tweet_id)
+  }
+`

@@ -8,6 +8,7 @@ export const TWEET_FRAGMENT = gql`
     likesCount
     retweetsCount
     commentsCount
+    bookmarksCount
     parent {
       id
       body
@@ -27,6 +28,7 @@ export const TWEET_FRAGMENT = gql`
     }
     isLiked
     isRetweeted
+    isBookmarked
     type
     visibility
     user {

@@ -4,9 +4,11 @@ export type TweetType = {
   user: UserType
   isLiked: boolean
   isRetweeted: boolean
+  isBookmarked: boolean
   likesCount: number
   commentsCount: number
   retweetsCount: number
+  bookmarksCount: number
   preview: PreviewType
   type: 'tweet' | 'retweet' | 'comment'
   parent?: TweetType

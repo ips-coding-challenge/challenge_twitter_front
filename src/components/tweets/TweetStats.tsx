@@ -16,6 +16,9 @@ const TweetStats = ({ id }: { id: number }) => {
       <p className="text-gray4 text-xs ml-4">
         {pluralize(tweet!.likesCount, 'Like')}
       </p>
+      <p className="text-gray4 text-xs ml-4">
+        {pluralize(tweet!.bookmarksCount, 'Bookmark')}
+      </p>
     </div>
   )
 }

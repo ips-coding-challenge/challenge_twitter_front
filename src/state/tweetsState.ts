@@ -35,3 +35,13 @@ export const isRetweetedState = atomFamily({
     },
   }),
 })
+
+export const isBookmarkedState = atomFamily({
+  key: 'isBookmarkedTweet',
+  default: selectorFamily({
+    key: 'isBookmarkedSelector',
+    get: (id: number) => ({ get }) => {
+      return get(singleTweetState(id))?.isBookmarked
+    },
+  }),
+})
