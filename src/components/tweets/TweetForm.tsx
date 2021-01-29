@@ -16,6 +16,7 @@ import Button from '../Button'
 type TweetFormProps = {
   tweet_id?: number
   type?: TweetTypeEnum
+  onSuccess?: Function
 }
 
 export enum TweetTypeEnum {
@@ -23,7 +24,7 @@ export enum TweetTypeEnum {
   COMMENT = 'comment',
 }
 
-const TweetForm = ({ tweet_id, type }: TweetFormProps) => {
+const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
   // Global state
   const user = useRecoilValue(userState)
   const setTweets = useSetRecoilState(tweetsState)
@@ -67,17 +68,28 @@ const TweetForm = ({ tweet_id, type }: TweetFormProps) => {
         hashtags,
         shortenedURLS,
       })
+
+      const payload: any = {
+        body: newBody ?? body,
+        hashtags,
+        url: shortenedURLS ? shortenedURLS[0].shorten : null,
+      }
+
+      if (type) {
+        payload.type = type
+      }
+      if (tweet_id) {
+        payload.parent_id = tweet_id
+      }
+
       await addTweetMutation({
         variables: {
-          payload: {
-            body: newBody ?? body,
-            hashtags,
-            url: shortenedURLS ? shortenedURLS[0].shorten : null,
-            type: type ?? TweetTypeEnum.TWEET,
-            parent_id: type === TweetTypeEnum.COMMENT ? tweet_id : null,
-          },
+          payload,
         },
       })
+      if (onSuccess) {
+        onSuccess()
+      }
     } catch (e) {
       if (e instanceof ValidationError) {
         setErrors(e)

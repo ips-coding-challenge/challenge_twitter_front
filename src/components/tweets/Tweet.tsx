@@ -134,7 +134,11 @@ const Tweet = ({ tweet }: TweetProps) => {
         </div>
 
         {showCommentForm && (
-          <TweetForm type={TweetTypeEnum.COMMENT} tweet_id={tweet.id} />
+          <TweetForm
+            type={TweetTypeEnum.COMMENT}
+            tweet_id={tweet.id}
+            onSuccess={() => setShowCommentForm(false)}
+          />
         )}
       </div>
     </div>
