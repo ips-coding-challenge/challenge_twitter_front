@@ -33,3 +33,9 @@ export type PreviewType = {
   description?: string
   image?: string
 }
+
+export type HashtagType = {
+  id: number
+  hashtag: string
+  tweetsCount?: number
+}
