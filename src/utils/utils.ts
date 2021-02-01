@@ -1,5 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { format } from 'date-fns'
+import { SyntheticEvent } from 'react'
 //@ts-ignore
 import TinyURL from 'tinyurl'
 
@@ -87,3 +88,5 @@ export const shortenURLS = async (
   }
   return tinyURLS
 }
+
+export const stopPropagation = (e: SyntheticEvent) => e.stopPropagation()

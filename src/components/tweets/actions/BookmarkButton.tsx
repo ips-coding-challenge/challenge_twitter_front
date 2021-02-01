@@ -45,8 +45,8 @@ const BookmarkButton = ({ id }: { id: number }) => {
       isSth={isBookmarked}
       icon={<MdBookmarkBorder />}
       onClick={() => toggleBookmark()}
-      text="Bookmark"
-      activeText="Bookmarked"
+      text="Save"
+      activeText="Saved"
       activeClass="blue"
     />
   )

@@ -1,6 +1,7 @@
 import { ApolloError, useMutation } from '@apollo/client'
 import { forwardRef, useEffect, useState } from 'react'
 import { MdImage, MdPublic } from 'react-icons/md'
+import { Link } from 'react-router-dom'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { ValidationError } from 'yup'
 import { ADD_TWEET } from '../../graphql/tweets/mutations'
@@ -12,7 +13,18 @@ import Alert from '../Alert'
 import Avatar from '../Avatar'
 import Button from '../Button'
 
-const TweetForm = () => {
+type TweetFormProps = {
+  tweet_id?: number
+  type?: TweetTypeEnum
+  onSuccess?: Function
+}
+
+export enum TweetTypeEnum {
+  TWEET = 'tweet',
+  COMMENT = 'comment',
+}
+
+const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
   // Global state
   const user = useRecoilValue(userState)
   const setTweets = useSetRecoilState(tweetsState)
@@ -56,15 +68,28 @@ const TweetForm = () => {
         hashtags,
         shortenedURLS,
       })
+
+      const payload: any = {
+        body: newBody ?? body,
+        hashtags,
+        url: shortenedURLS ? shortenedURLS[0].shorten : null,
+      }
+
+      if (type) {
+        payload.type = type
+      }
+      if (tweet_id) {
+        payload.parent_id = tweet_id
+      }
+
       await addTweetMutation({
         variables: {
-          payload: {
-            body: newBody ?? body,
-            hashtags,
-            url: shortenedURLS ? shortenedURLS[0].shorten : null,
-          },
+          payload,
         },
       })
+      if (onSuccess) {
+        onSuccess()
+      }
     } catch (e) {
       if (e instanceof ValidationError) {
         setErrors(e)
@@ -87,8 +112,23 @@ const TweetForm = () => {
     }
   }, [data])
 
+  const commentHeader = () => {
+    return (
+      <>
+        <span>In response to </span>
+        <Link to="/" className="text-primary hover:text-primary_hover">
+          @{user!.username}
+        </Link>
+      </>
+    )
+  }
+
   return (
-    <div className="mb-4 p-4 w-full rounded-lg shadow bg-white">
+    <div
+      className={`mb-4 p-4 w-full rounded-lg shadow bg-white ${
+        type === TweetTypeEnum.COMMENT ? 'mt-4 border border-primary' : ''
+      }`}
+    >
       {serverErrors.length > 0 && (
         <div className="mb-4">
           {serverErrors.map((e: any, index: number) => {
@@ -103,7 +143,9 @@ const TweetForm = () => {
         </div>
       )}
 
-      <h3>Tweet something</h3>
+      <h3 className={type === TweetTypeEnum.COMMENT ? 'text-sm' : ''}>
+        {type === TweetTypeEnum.COMMENT ? commentHeader() : 'Tweet something'}
+      </h3>
       <hr className="my-2" />
       <div className="flex w-full">
         <Avatar className="mr-2" display_name={user!.display_name} />
@@ -130,7 +172,7 @@ const TweetForm = () => {
               </div>
             </div>
             <Button
-              text="Tweet"
+              text={type === TweetTypeEnum.COMMENT ? 'Comment' : 'Tweet'}
               variant="primary"
               onClick={addTweet}
               disabled={loading}
