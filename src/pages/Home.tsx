@@ -1,5 +1,6 @@
 import React from 'react'
 import Layout from '../components/Layout'
+import Hashtags from '../components/sidebars/Hashtags'
 import Feed from '../components/tweets/Feed'
 
 const Home = () => {
@@ -15,12 +16,10 @@ const Home = () => {
             <Feed />
           </div>
 
-          {/* Home Sidebar */}
-          <div className="hidden md:block w-sidebarWidth bg-gray5 flex-none">
-            Sidebar
-          </div>
-
           {/* Hashtags */}
+          <div className="hidden md:block w-sidebarWidth flex-none">
+            <Hashtags />
+          </div>
 
           {/* Followers Suggestions */}
         </div>
