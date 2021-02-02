@@ -3,10 +3,15 @@ import 'cropperjs/dist/cropper.css'
 import { CSSProperties, useEffect, useState } from 'react'
 import { Cropper } from 'react-cropper'
 import { MdCancel, MdCloudUpload, MdEdit } from 'react-icons/md'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { useUploadFile } from '../../hooks/useUploadMedia'
-import { uploadMediaState } from '../../state/mediaState'
+import {
+  uploadMediaFinishedState,
+  uploadMediaProgressState,
+  uploadMediaState,
+} from '../../state/mediaState'
 import Button from '../Button'
+import UploadMediaProgress from './UploadMediaProgress'
 
 const imageStyle: CSSProperties = {
   maxHeight: '300px',
@@ -17,21 +22,28 @@ const imageStyle: CSSProperties = {
 const UploadMedia = () => {
   // Global State
   const [uploadMediaFile, setUploadMediaFile] = useRecoilState(uploadMediaState)
+  const setUploadMediaProgress = useSetRecoilState(uploadMediaProgressState)
+  const [uploadFinished, setUploadFinished] = useRecoilState(
+    uploadMediaFinishedState
+  )
 
   const [src, setSrc] = useState('')
   const [show, setShow] = useState(false)
   const [cropper, setCropper] = useState<any>()
   const [cropData, setCropData] = useState('')
-  const [progress, setProgress] = useState(0)
+  // const [uploadFinished, setUploadFinished] = useState(false)
+  // const [progress, setProgress] = useState(0)
 
-  const { uploadFile, errors, isUploading } = useUploadFile({
+  const { uploadFile, errors, isUploading, isFinished } = useUploadFile({
     folder: 'tweeter/medias',
     onUploadProgress: (e, f) => {
       console.log('onUploadProgress called')
-      setProgress(() => Math.floor((e.loaded / e.total) * 100))
+      setUploadMediaProgress(Math.floor((e.loaded / e.total) * 100))
     },
     onUploadFinished: (e, f) => {
       console.log('onUploadFinished called')
+      setUploadFinished(true)
+      // setUploadFinished(true)
     },
   })
 
@@ -81,7 +93,6 @@ const UploadMedia = () => {
         <div>
           {!show ? (
             <div className="flex">
-              {progress > 0 && <div>{progress}% uploaded</div>}
               <div>
                 <MdCancel
                   className="image-actions"
@@ -89,28 +100,40 @@ const UploadMedia = () => {
                     setCropData('')
                     setSrc('')
                     setUploadMediaFile(null)
+                    setUploadMediaProgress(0)
+                    setUploadFinished(false)
                   }}
                 />
               </div>
 
-              <img
-                style={imageStyle}
-                className="rounded-lg mx-2"
-                src={cropData ? cropData : src}
-                onClick={() => setShow(true)}
-              />
-              <div>
-                <MdEdit
-                  className="image-actions mb-2"
+              <div className="relative w-full h-auto mx-2">
+                <img
+                  style={imageStyle}
+                  className="rounded-lg"
+                  src={cropData ? cropData : src}
                   onClick={() => setShow(true)}
                 />
-                <MdCloudUpload
-                  className="image-actions"
-                  onClick={() => {
-                    sendImage()
-                  }}
-                />
+                <UploadMediaProgress />
               </div>
+
+              {!uploadFinished && (
+                <div>
+                  <MdEdit
+                    className="image-actions mb-2"
+                    onClick={() => {
+                      setShow(true)
+                      setUploadMediaProgress(0)
+                    }}
+                  />
+
+                  <MdCloudUpload
+                    className="image-actions"
+                    onClick={() => {
+                      sendImage()
+                    }}
+                  />
+                </div>
+              )}
             </div>
           ) : (
             <Cropper
@@ -118,6 +141,7 @@ const UploadMedia = () => {
               className="rounded-lg"
               initialAspectRatio={1}
               src={src}
+              zoomable={false}
               viewMode={1}
               guides={true}
               minCropBoxHeight={10}

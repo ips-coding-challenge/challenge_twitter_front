@@ -5,10 +5,19 @@ import { Link } from 'react-router-dom'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { ValidationError } from 'yup'
 import { ADD_TWEET } from '../../graphql/tweets/mutations'
-import { uploadMediaState } from '../../state/mediaState'
+import {
+  uploadMediaFinishedState,
+  uploadMediaState,
+  uploadMediaUrlState,
+} from '../../state/mediaState'
 import { tweetsState } from '../../state/tweetsState'
 import { userState } from '../../state/userState'
-import { extractMetadata, handleErrors, shortenURLS } from '../../utils/utils'
+import {
+  extractMetadata,
+  handleErrors,
+  shortenURLS,
+  validateFiles,
+} from '../../utils/utils'
 import { addTweetSchema } from '../../validations/tweets/schema'
 import Alert from '../Alert'
 import Avatar from '../Avatar'
@@ -31,7 +40,8 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
   const user = useRecoilValue(userState)
   const setTweets = useSetRecoilState(tweetsState)
   const [uploadMedia, setUploadMedia] = useRecoilState(uploadMediaState)
-  const uploadMediaUrl = useRecoilValue(uploadMediaState)
+  const uploadMediaUrl = useRecoilValue(uploadMediaUrlState)
+  const uploadMediaFinished = useRecoilValue(uploadMediaFinishedState)
 
   // Local state
   const [body, setBody] = useState('')
@@ -41,6 +51,7 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<ValidationError | null>(null)
   const [serverErrors, setServerErrors] = useState<any[]>([])
+  const [mediaErrors, setMediaErrors] = useState<string | null>(null)
 
   const addTweet = async () => {
     setErrors(null)
@@ -110,8 +121,14 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
   const onMediaChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     if (e.target.files && e.target.files.length > 0) {
-      console.log('e.target.files', e.target.files[0])
-      setUploadMedia(e.target.files[0])
+      const file = e.target.files[0]
+      try {
+        console.log('file', file)
+        validateFiles(file, 5)
+        setUploadMedia(file)
+      } catch (e) {
+        console.log('error with media file', e.message)
+      }
     }
   }
 
@@ -123,6 +140,10 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
       setBody('')
     }
   }, [data])
+
+  useEffect(() => {
+    console.log('upload finished', uploadMediaFinished)
+  }, [uploadMediaFinished])
 
   const commentHeader = () => {
     return (
@@ -203,8 +224,11 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
             <Button
               text={type === TweetTypeEnum.COMMENT ? 'Comment' : 'Tweet'}
               variant="primary"
+              className="disabled:opacity-30"
               onClick={addTweet}
-              disabled={loading}
+              disabled={
+                loading || (uploadMedia !== null && !uploadMediaFinished)
+              }
               loading={loading}
             />
           </div>

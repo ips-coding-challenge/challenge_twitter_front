@@ -22,22 +22,7 @@ export const useUploadFile = ({
 }: useUploadFileProps) => {
   const [errors, setErrors] = useState<any[]>([])
   const [isUploading, setIsUploading] = useState<boolean>(false)
-
-  const validateFiles = (files: FileList) => {
-    if (files.length > maxFiles) {
-      throw new Error(`You cannot upload more than ${maxFiles} files`)
-    }
-
-    for (const f of Array.from(files)) {
-      if (Math.round(f.size / 1024 / 1024) > maxSize) {
-        throw new Error(`You cannot upload file larger than ${maxSize} mb`)
-      }
-      console.log('f', f)
-      if (!fileFormat.includes(f.type)) {
-        throw new Error(`Only those file are accepted: ${fileFormat}`)
-      }
-    }
-  }
+  const [isFinished, setIsFinished] = useState<boolean>(false)
 
   const createFormData = (file: any) => {
     const formData = new FormData()
@@ -71,6 +56,7 @@ export const useUploadFile = ({
             onDownloadProgress: (e: ProgressEvent<EventTarget>) => {
               onUploadFinished(e, file)
               setIsUploading(false)
+              setIsFinished(true)
             },
           }
         )
@@ -84,5 +70,5 @@ export const useUploadFile = ({
     }
   }
 
-  return { uploadFile, errors, isUploading, setIsUploading }
+  return { uploadFile, errors, isUploading, setIsUploading, isFinished }
 }

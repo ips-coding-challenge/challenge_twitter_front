@@ -90,3 +90,16 @@ export const shortenURLS = async (
 }
 
 export const stopPropagation = (e: SyntheticEvent) => e.stopPropagation()
+
+export const validateFiles = (
+  file: File,
+  maxSize: number,
+  fileFormat = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+) => {
+  if (Math.round(file.size / 1024 / 1024) > maxSize) {
+    throw new Error(`You cannot upload file larger than ${maxSize} mb`)
+  }
+  if (!fileFormat.includes(file.type)) {
+    throw new Error(`Only those file are accepted: ${fileFormat}`)
+  }
+}
