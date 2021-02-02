@@ -18,7 +18,7 @@ const Hashtags = () => {
         <ul className="mt-4">
           {data.trendingHashtags.map((h: HashtagType) => {
             return (
-              <li className="mb-4 text-noto">
+              <li key={h.id} className="mb-4 text-noto">
                 <Link
                   to={`/hashtags/${h.hashtag.replace('#', '')}`}
                   className="font-semibold text-gray8 mb-3 hover:text-gray-500 transition-colors duration-300"

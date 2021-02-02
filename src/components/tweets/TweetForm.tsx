@@ -1,10 +1,11 @@
 import { ApolloError, useMutation } from '@apollo/client'
-import { forwardRef, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MdImage, MdPublic } from 'react-icons/md'
 import { Link } from 'react-router-dom'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { ValidationError } from 'yup'
 import { ADD_TWEET } from '../../graphql/tweets/mutations'
+import { uploadMediaState } from '../../state/mediaState'
 import { tweetsState } from '../../state/tweetsState'
 import { userState } from '../../state/userState'
 import { extractMetadata, handleErrors, shortenURLS } from '../../utils/utils'
@@ -12,6 +13,7 @@ import { addTweetSchema } from '../../validations/tweets/schema'
 import Alert from '../Alert'
 import Avatar from '../Avatar'
 import Button from '../Button'
+import UploadMedia from './UploadMedia'
 
 type TweetFormProps = {
   tweet_id?: number
@@ -28,6 +30,8 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
   // Global state
   const user = useRecoilValue(userState)
   const setTweets = useSetRecoilState(tweetsState)
+  const [uploadMedia, setUploadMedia] = useRecoilState(uploadMediaState)
+  const uploadMediaUrl = useRecoilValue(uploadMediaState)
 
   // Local state
   const [body, setBody] = useState('')
@@ -103,6 +107,14 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
     }
   }
 
+  const onMediaChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    if (e.target.files && e.target.files.length > 0) {
+      console.log('e.target.files', e.target.files[0])
+      setUploadMedia(e.target.files[0])
+    }
+  }
+
   useEffect(() => {
     if (data) {
       setTweets((old) => {
@@ -162,12 +174,29 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
             )}
           </div>
 
+          <UploadMedia />
+
           {/* Actions */}
           <div className="flex justify-between">
             <div className="flex items-center">
-              <MdImage className="text-primary mr-2" />
+              {/* <MdImage className="text-primary mr-2" /> */}
+              <label className="btn btn-primary" htmlFor="file">
+                <MdImage
+                  className={`text-xl text-primary mr-1 ${
+                    uploadMedia
+                      ? 'cursor-default text-gray5'
+                      : 'cursor-pointer hover:text-primary_hover'
+                  }`}
+                />
+                <input
+                  className="hidden"
+                  type="file"
+                  id="file"
+                  onChange={onMediaChange}
+                />
+              </label>
               <div className="text-primary inline-flex items-center">
-                <MdPublic className="mr-1" />
+                <MdPublic className="mr-1 text-xl" />
                 <span className="text-xs">Everyone can reply</span>
               </div>
             </div>

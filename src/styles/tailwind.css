@@ -50,6 +50,12 @@
   border: 2px solid #fff;
   border-color: #fff transparent #fff transparent;
 }
+
+/* Image preview */
+.image-actions {
+  @apply text-gray7 text-3xl cursor-pointer hover:text-black transition-colors duration-300;
+}
+
 @keyframes loader {
   0% {
     transform: rotate(0deg);

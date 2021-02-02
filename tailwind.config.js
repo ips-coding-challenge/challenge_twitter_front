@@ -33,12 +33,14 @@ module.exports = {
       },
       maxWidth: {
         container: "1120px"
-      }
+      },
+      
     }
   },
   variants: {
     extend: {
-      backgroundColor: ['active','group-hover']
+      backgroundColor: ['active','group-hover'],
+      opacity: ['disabled']
     }
   },
   plugins: [],
