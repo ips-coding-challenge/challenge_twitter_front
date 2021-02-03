@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useRecoilValue } from 'recoil'
 import {
   uploadMediaFinishedState,
@@ -14,8 +14,11 @@ const UploadMediaProgress = () => {
         {!finished ? (
           <div
             style={{ width: '200px' }}
-            className="bg-black opacity-75 h-2 flex items-center text-sm rounded"
+            className="relative bg-black opacity-75 h-5 flex items-center text-sm rounded"
           >
+            <div className="absolute inset-0 flex items-center justify-center text-sm text-white font-bold">
+              {progress} %
+            </div>
             <div
               style={{ width: `${progress}%` }}
               className="h-full bg-primary rounded"

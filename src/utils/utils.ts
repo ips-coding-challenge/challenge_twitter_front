@@ -28,6 +28,7 @@ export const handleErrors = (e: any) => {
   if (e instanceof ApolloError) {
     if (
       e.graphQLErrors &&
+      e.graphQLErrors[0] &&
       e.graphQLErrors[0].message === 'Argument Validation Error'
     ) {
       errors.push(formatValidationErrors(e.graphQLErrors))

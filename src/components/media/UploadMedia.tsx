@@ -1,16 +1,18 @@
-import { AxiosResponse } from 'axios'
 import 'cropperjs/dist/cropper.css'
 import { CSSProperties, useEffect, useState } from 'react'
 import { Cropper } from 'react-cropper'
 import { MdCancel, MdCloudUpload, MdEdit } from 'react-icons/md'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import { finished } from 'stream'
 import { useUploadFile } from '../../hooks/useUploadMedia'
 import {
   uploadMediaFinishedState,
   uploadMediaProgressState,
   uploadMediaState,
+  uploadMediaUrlState,
 } from '../../state/mediaState'
 import Button from '../Button'
+import UploadMediaButton from './UploadMediaButton'
 import UploadMediaProgress from './UploadMediaProgress'
 
 const imageStyle: CSSProperties = {
@@ -23,6 +25,7 @@ const UploadMedia = () => {
   // Global State
   const [uploadMediaFile, setUploadMediaFile] = useRecoilState(uploadMediaState)
   const setUploadMediaProgress = useSetRecoilState(uploadMediaProgressState)
+  const setUploadMediaURL = useSetRecoilState(uploadMediaUrlState)
   const [uploadFinished, setUploadFinished] = useRecoilState(
     uploadMediaFinishedState
   )
@@ -31,19 +34,18 @@ const UploadMedia = () => {
   const [show, setShow] = useState(false)
   const [cropper, setCropper] = useState<any>()
   const [cropData, setCropData] = useState('')
-  // const [uploadFinished, setUploadFinished] = useState(false)
-  // const [progress, setProgress] = useState(0)
 
-  const { uploadFile, errors, isUploading, isFinished } = useUploadFile({
+  const { uploadFile, data, uploading, errors, source } = useUploadFile({
     folder: 'tweeter/medias',
     onUploadProgress: (e, f) => {
-      console.log('onUploadProgress called')
-      setUploadMediaProgress(Math.floor((e.loaded / e.total) * 100))
+      // 95 instead of 100 because there is a slight delay
+      // to go to onUploadProgress to onUploadFinished
+      // It's more a UX thing...
+      setUploadMediaProgress(Math.floor((e.loaded / e.total) * 95))
     },
     onUploadFinished: (e, f) => {
-      console.log('onUploadFinished called')
+      setUploadMediaProgress(100)
       setUploadFinished(true)
-      // setUploadFinished(true)
     },
   })
 
@@ -66,14 +68,12 @@ const UploadMedia = () => {
     }
   }
 
-  const sendImage = async () => {
-    const res = await uploadFile(cropData.length ? cropData : src)
-
-    if (res) {
-      const finalUrl = `https://res.cloudinary.com/trucmachin/image/upload/w_800/v1607022210/${res.data.public_id}.${res.data.format}`
-      console.log('finalURL', finalUrl)
+  useEffect(() => {
+    if (data) {
+      const finalURL = `https://res.cloudinary.com/trucmachin/image/upload/w_800/v1607022210/${data.public_id}.${data.format}`
+      setUploadMediaURL(finalURL)
     }
-  }
+  }, [data])
 
   // I extract the preview image when a file is selected
   // The uploadeMediaFile is triggered by the the TweetForm input file component
@@ -87,25 +87,27 @@ const UploadMedia = () => {
     }
   }, [uploadMediaFile])
 
+  useEffect(() => {
+    console.log('errors from the uploadMedia useEffect', errors)
+  }, [errors])
+
+  const cancel = () => {
+    setCropData('')
+    setSrc('')
+    setUploadMediaFile(null)
+    setUploadMediaProgress(0)
+    setUploadFinished(false)
+    if (!finished) {
+      source?.cancel('Upload canceled')
+    }
+  }
+
   return (
     <div className="my-2">
       {src.length ? (
         <div>
           {!show ? (
             <div className="flex">
-              <div>
-                <MdCancel
-                  className="image-actions"
-                  onClick={() => {
-                    setCropData('')
-                    setSrc('')
-                    setUploadMediaFile(null)
-                    setUploadMediaProgress(0)
-                    setUploadFinished(false)
-                  }}
-                />
-              </div>
-
               <div className="relative w-full h-auto mx-2">
                 <img
                   style={imageStyle}
@@ -114,9 +116,50 @@ const UploadMedia = () => {
                   onClick={() => setShow(true)}
                 />
                 <UploadMediaProgress />
+                {/* Cancel Button */}
+                <div className="absolute top-4 left-4">
+                  <UploadMediaButton
+                    icon={<MdCancel className="media-action" />}
+                    onClick={cancel}
+                  />
+                </div>
+
+                {/* Edit and Upload Button */}
+                {!uploadFinished && !uploading && (
+                  <div className="absolute top-4 right-4 flex flex-col">
+                    <UploadMediaButton
+                      icon={<MdEdit className="media-action" />}
+                      onClick={() => {
+                        setShow(true)
+                        setUploadMediaProgress(0)
+                      }}
+                    />
+                    <UploadMediaButton
+                      className="mt-2"
+                      icon={<MdCloudUpload className="media-action" />}
+                      onClick={() => {
+                        uploadFile(cropData.length ? cropData : src)
+                      }}
+                    />
+                    {/* <MdEdit
+                      className="media-action mb-2"
+                      onClick={() => {
+                        setShow(true)
+                        setUploadMediaProgress(0)
+                      }}
+                    />
+
+                    <MdCloudUpload
+                      className="media-action"
+                      onClick={() => {
+                        uploadFile(cropData.length ? cropData : src)
+                      }}
+                    /> */}
+                  </div>
+                )}
               </div>
 
-              {!uploadFinished && (
+              {/* {!uploadFinished && (
                 <div>
                   <MdEdit
                     className="image-actions mb-2"
@@ -129,11 +172,11 @@ const UploadMedia = () => {
                   <MdCloudUpload
                     className="image-actions"
                     onClick={() => {
-                      sendImage()
+                      uploadFile(cropData.length ? cropData : src)
                     }}
                   />
                 </div>
-              )}
+              )} */}
             </div>
           ) : (
             <Cropper

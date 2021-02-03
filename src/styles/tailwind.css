@@ -51,9 +51,9 @@
   border-color: #fff transparent #fff transparent;
 }
 
-/* Image preview */
-.image-actions {
-  @apply text-gray7 text-3xl cursor-pointer hover:text-black transition-colors duration-300;
+/* Media preview actions */
+.media-action {
+  @apply text-white text-2xl cursor-pointer hover:text-gray7 transition-colors duration-300;
 }
 
 @keyframes loader {

@@ -1,8 +1,12 @@
-import axios, { AxiosResponse } from 'axios'
+import axios, {
+  AxiosResponse,
+  CancelTokenSource,
+  CancelTokenStatic,
+} from 'axios'
 import { useState } from 'react'
 
 interface useUploadFileProps {
-  folder?: string
+  folder: string
   onUploadProgress: (e: ProgressEvent<EventTarget>, f: File) => void
   onUploadFinished: (e: ProgressEvent<EventTarget>, f: File) => void
   multiple?: boolean
@@ -12,7 +16,7 @@ interface useUploadFileProps {
 }
 
 export const useUploadFile = ({
-  folder = 'thullo',
+  folder,
   onUploadProgress,
   onUploadFinished,
   multiple = false,
@@ -20,9 +24,10 @@ export const useUploadFile = ({
   maxSize = 5,
   fileFormat = ['image/jpeg', 'image/jpg', 'image/png'],
 }: useUploadFileProps) => {
+  const [data, setData] = useState<any>(null)
   const [errors, setErrors] = useState<any[]>([])
-  const [isUploading, setIsUploading] = useState<boolean>(false)
-  const [isFinished, setIsFinished] = useState<boolean>(false)
+  const [uploading, setUploading] = useState<boolean>(false)
+  const [source, setSource] = useState<CancelTokenSource | null>(null)
 
   const createFormData = (file: any) => {
     const formData = new FormData()
@@ -38,37 +43,53 @@ export const useUploadFile = ({
 
   const uploadFile = async (file: any) => {
     setErrors([])
-    setIsUploading(true)
+    setUploading(true)
 
     if (file) {
       try {
         const formData = createFormData(file)
-        const sendRequest = axios.post(
+        const cancelToken = axios.CancelToken
+        const source = cancelToken?.source()
+        setSource(source)
+        const res = await axios.post(
           process.env.REACT_APP_CLOUDINARY_URL!,
           formData,
           {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
+            cancelToken: source.token,
             onUploadProgress: (e: ProgressEvent<EventTarget>) => {
-              onUploadProgress(e, file)
+              try {
+                onUploadProgress(e, file)
+              } catch (e) {
+                console.log('error onUploadProgress', e)
+                setErrors((old) => old.concat(e.message))
+              }
             },
             onDownloadProgress: (e: ProgressEvent<EventTarget>) => {
-              onUploadFinished(e, file)
-              setIsUploading(false)
-              setIsFinished(true)
+              try {
+                onUploadFinished(e, file)
+                setUploading(false)
+              } catch (e) {
+                console.log('error onDownloadProgress', e.message)
+                setErrors((old) => old.concat(e.message))
+              }
             },
           }
         )
 
-        return sendRequest
+        setData(res.data)
       } catch (e) {
-        console.log('Error', e)
+        if (axios.isCancel(e)) {
+          console.log('Request canceled', e.message)
+        }
+        console.log('Error from the hook', e)
         setErrors((errors) => errors.concat(e))
-        setIsUploading(false)
+        setUploading(false)
       }
     }
   }
 
-  return { uploadFile, errors, isUploading, setIsUploading, isFinished }
+  return { uploadFile, data, errors, uploading, source }
 }
