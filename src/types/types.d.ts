@@ -12,7 +12,7 @@ export type TweetType = {
   preview: PreviewType
   type: 'tweet' | 'retweet' | 'comment'
   parent?: TweetType
-  media?: string
+  media?: MediaType
   visibility: 'public' | 'follower'
   created_at: string
   updated_at: string
@@ -38,4 +38,9 @@ export type HashtagType = {
   id: number
   hashtag: string
   tweetsCount?: number
+}
+
+export type MediaType = {
+  id: number
+  url: string
 }

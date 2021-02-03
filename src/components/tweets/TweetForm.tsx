@@ -4,6 +4,7 @@ import { MdImage, MdPublic } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { ValidationError } from 'yup'
+
 import { ADD_TWEET } from '../../graphql/tweets/mutations'
 import {
   uploadMediaFinishedState,
@@ -153,10 +154,6 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
     }
   }, [data])
 
-  useEffect(() => {
-    console.log('upload finished', uploadMediaFinished)
-  }, [uploadMediaFinished])
-
   const commentHeader = () => {
     return (
       <>
@@ -206,7 +203,6 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
           {/* Actions */}
           <div className="flex justify-between">
             <div className="flex items-center">
-              {/* <MdImage className="text-primary mr-2" /> */}
               <label className="btn btn-primary" htmlFor="file">
                 <MdImage
                   className={`text-xl text-primary mr-1 ${

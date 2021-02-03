@@ -84,12 +84,12 @@ const UploadMedia = () => {
     }
     if (uploadMediaFile) {
       extractPreview()
+    } else {
+      setSrc('')
+      setCropData('')
+      setShow(false)
     }
   }, [uploadMediaFile])
-
-  useEffect(() => {
-    console.log('errors from the uploadMedia useEffect', errors)
-  }, [errors])
 
   const cancel = () => {
     setCropData('')
@@ -141,42 +141,9 @@ const UploadMedia = () => {
                         uploadFile(cropData.length ? cropData : src)
                       }}
                     />
-                    {/* <MdEdit
-                      className="media-action mb-2"
-                      onClick={() => {
-                        setShow(true)
-                        setUploadMediaProgress(0)
-                      }}
-                    />
-
-                    <MdCloudUpload
-                      className="media-action"
-                      onClick={() => {
-                        uploadFile(cropData.length ? cropData : src)
-                      }}
-                    /> */}
                   </div>
                 )}
               </div>
-
-              {/* {!uploadFinished && (
-                <div>
-                  <MdEdit
-                    className="image-actions mb-2"
-                    onClick={() => {
-                      setShow(true)
-                      setUploadMediaProgress(0)
-                    }}
-                  />
-
-                  <MdCloudUpload
-                    className="image-actions"
-                    onClick={() => {
-                      uploadFile(cropData.length ? cropData : src)
-                    }}
-                  />
-                </div>
-              )} */}
             </div>
           ) : (
             <Cropper

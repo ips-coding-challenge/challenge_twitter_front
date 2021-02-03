@@ -23,7 +23,8 @@ module.exports = {
       },
       height: {
         navbar: '68px',
-        withoutNavbar: 'calc(100vh - 68px)'
+        withoutNavbar: 'calc(100vh - 68px)',
+        tweetImage: '250px'
       },
       width: {
         authContainer: "500px",
