@@ -9,6 +9,10 @@ export const TWEET_FRAGMENT = gql`
     retweetsCount
     commentsCount
     bookmarksCount
+    media {
+      id
+      url
+    }
     parent {
       id
       body

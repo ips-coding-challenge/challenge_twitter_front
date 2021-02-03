@@ -13,6 +13,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "autoprefixer": "10.x",
+    "axios": "^0.21.1",
     "cross-env": "7.x",
     "date-fns": "^2.16.1",
     "graphql": "^15.4.0",
@@ -21,9 +22,11 @@
     "postcss-cli": "8.x",
     "postcss-preset-env": "6.x",
     "react": "^17.0.1",
+    "react-cropper": "^2.1.4",
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.14.1",
     "react-icons": "^4.1.0",
+    "react-lazy-load-image-component": "^1.5.1",
     "react-nl2br": "^1.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
@@ -60,6 +63,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-lazy-load-image-component": "^1.5.1",
     "@types/react-router-dom": "^5.1.7"
   }
 }

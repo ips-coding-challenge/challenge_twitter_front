@@ -1,17 +1,31 @@
 import { ApolloError, useMutation } from '@apollo/client'
-import { forwardRef, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MdImage, MdPublic } from 'react-icons/md'
 import { Link } from 'react-router-dom'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { ValidationError } from 'yup'
+
 import { ADD_TWEET } from '../../graphql/tweets/mutations'
+import {
+  uploadMediaFinishedState,
+  uploadMediaProgressState,
+  uploadMediaState,
+  uploadMediaUrlState,
+} from '../../state/mediaState'
 import { tweetsState } from '../../state/tweetsState'
 import { userState } from '../../state/userState'
-import { extractMetadata, handleErrors, shortenURLS } from '../../utils/utils'
+import {
+  extractMetadata,
+  handleErrors,
+  shortenURLS,
+  validateFiles,
+} from '../../utils/utils'
 import { addTweetSchema } from '../../validations/tweets/schema'
 import Alert from '../Alert'
 import Avatar from '../Avatar'
 import Button from '../Button'
+import Errors from '../errors/Errors'
+import UploadMedia from '../media/UploadMedia'
 
 type TweetFormProps = {
   tweet_id?: number
@@ -28,6 +42,14 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
   // Global state
   const user = useRecoilValue(userState)
   const setTweets = useSetRecoilState(tweetsState)
+  const [uploadMedia, setUploadMedia] = useRecoilState(uploadMediaState)
+  const [uploadMediaUrl, setUploadMediaURL] = useRecoilState(
+    uploadMediaUrlState
+  )
+  const [uploadMediaFinished, setUploadMediaFinished] = useRecoilState(
+    uploadMediaFinishedState
+  )
+  const setUploadMediaProgress = useSetRecoilState(uploadMediaProgressState)
 
   // Local state
   const [body, setBody] = useState('')
@@ -37,6 +59,7 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<ValidationError | null>(null)
   const [serverErrors, setServerErrors] = useState<any[]>([])
+  const [mediaError, setMediaError] = useState<string | null>(null)
 
   const addTweet = async () => {
     setErrors(null)
@@ -73,13 +96,9 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
         body: newBody ?? body,
         hashtags,
         url: shortenedURLS ? shortenedURLS[0].shorten : null,
-      }
-
-      if (type) {
-        payload.type = type
-      }
-      if (tweet_id) {
-        payload.parent_id = tweet_id
+        ...(type && { type }),
+        ...(tweet_id && { parent_id: tweet_id }),
+        ...(uploadMediaUrl && { media: uploadMediaUrl }),
       }
 
       await addTweetMutation({
@@ -100,6 +119,29 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
       console.log('e', e)
     } finally {
       setLoading(false)
+
+      //Reset all medias state
+      //Maybe do that only if the request is successfull
+      setUploadMediaURL(null)
+      setUploadMedia(null)
+      setUploadMediaFinished(false)
+      setUploadMediaProgress(0)
+    }
+  }
+
+  const onMediaChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    setMediaError(null)
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0]
+      try {
+        console.log('file', file)
+        validateFiles(file, 5)
+        setUploadMedia(file)
+      } catch (e) {
+        setMediaError(e.message)
+        console.log('error with media file', e.message)
+      }
     }
   }
 
@@ -129,19 +171,8 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
         type === TweetTypeEnum.COMMENT ? 'mt-4 border border-primary' : ''
       }`}
     >
-      {serverErrors.length > 0 && (
-        <div className="mb-4">
-          {serverErrors.map((e: any, index: number) => {
-            return (
-              <Alert
-                key={index}
-                variant="danger"
-                message={Array.isArray(e) ? e[0].message : e.message}
-              />
-            )
-          })}
-        </div>
-      )}
+      {/* Errors from the server */}
+      <Errors errors={serverErrors} />
 
       <h3 className={type === TweetTypeEnum.COMMENT ? 'text-sm' : ''}>
         {type === TweetTypeEnum.COMMENT ? commentHeader() : 'Tweet something'}
@@ -158,24 +189,48 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
               placeholder="What's happening"
             ></textarea>
             {errors && errors.path === 'body' && (
-              <span className="text-red-500 text-sm">{errors.message}</span>
+              <span className="text-red-500 text-sm break-all">
+                {errors.message}
+              </span>
             )}
           </div>
+
+          <UploadMedia />
+          {mediaError?.length && (
+            <span className="text-red-500 text-sm break-all">{mediaError}</span>
+          )}
 
           {/* Actions */}
           <div className="flex justify-between">
             <div className="flex items-center">
-              <MdImage className="text-primary mr-2" />
+              <label className="btn btn-primary" htmlFor="file">
+                <MdImage
+                  className={`text-xl text-primary mr-1 ${
+                    uploadMedia
+                      ? 'cursor-default text-gray5'
+                      : 'cursor-pointer hover:text-primary_hover'
+                  }`}
+                />
+                <input
+                  className="hidden"
+                  type="file"
+                  id="file"
+                  onChange={onMediaChange}
+                />
+              </label>
               <div className="text-primary inline-flex items-center">
-                <MdPublic className="mr-1" />
+                <MdPublic className="mr-1 text-xl" />
                 <span className="text-xs">Everyone can reply</span>
               </div>
             </div>
             <Button
               text={type === TweetTypeEnum.COMMENT ? 'Comment' : 'Tweet'}
               variant="primary"
+              className="disabled:opacity-30"
               onClick={addTweet}
-              disabled={loading}
+              disabled={
+                loading || (uploadMedia !== null && !uploadMediaFinished)
+              }
               loading={loading}
             />
           </div>

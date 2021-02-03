@@ -50,6 +50,12 @@
   border: 2px solid #fff;
   border-color: #fff transparent #fff transparent;
 }
+
+/* Media preview actions */
+.media-action {
+  @apply text-white text-2xl cursor-pointer hover:text-gray7 transition-colors duration-300;
+}
+
 @keyframes loader {
   0% {
     transform: rotate(0deg);

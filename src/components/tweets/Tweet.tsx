@@ -15,6 +15,7 @@ import TweetStats from './TweetStats'
 import BookmarkButton from './actions/BookmarkButton'
 import TweetForm, { TweetTypeEnum } from './TweetForm'
 import { Link } from 'react-router-dom'
+import MyImage from '../MyImage'
 
 type TweetProps = {
   tweet: TweetType
@@ -48,7 +49,11 @@ const Tweet = ({ tweet }: TweetProps) => {
       nl2br(tweet.body),
       /(https?:\/\/\S+)/g,
       (match, i) => {
-        if (tweet.preview && match === tweet.preview.url) {
+        if (
+          tweet.preview &&
+          match === tweet.preview.url &&
+          tweet.media === null
+        ) {
           return <Preview key={tweet.preview.id} preview={tweet.preview} />
         } else {
           return (
@@ -107,10 +112,11 @@ const Tweet = ({ tweet }: TweetProps) => {
             </div>
           </div>
 
-          {/* Media? */}
-          {tweet.media && <img src={tweet.media} alt="tweet media" />}
           {/* Body */}
           <div className="mt-6 text-gray5">{renderParsedTweet()}</div>
+
+          {/* Media? */}
+          {tweet.media && <MyImage src={tweet.media.url} />}
 
           {/* Metadata */}
           <TweetStats id={tweet.id} />

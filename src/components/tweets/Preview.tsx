@@ -1,4 +1,5 @@
 import { stopPropagation } from '../../utils/utils'
+import MyImage from '../MyImage'
 
 const Preview = ({ preview }: any) => {
   return (
@@ -10,11 +11,12 @@ const Preview = ({ preview }: any) => {
       rel="noopener, noreferrer"
     >
       {preview.image && (
-        <img
-          className="rounded object-cover w-full"
-          src={preview.image}
-          alt={preview.title}
-        />
+        <MyImage src={preview.image} alt={preview.title} />
+        // <img
+        //   className="rounded object-cover w-full"
+        //   src={preview.image}
+        //   alt={preview.title}
+        // />
       )}
       <h4 className="font-semibold my-2">{preview.title}</h4>
       {preview.description && <p>{preview.description}</p>}
