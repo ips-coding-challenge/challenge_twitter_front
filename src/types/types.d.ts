@@ -24,6 +24,9 @@ export type UserType = {
   display_name: string
   email?: string
   avatar?: string
+  banner?: string
+  bio?: string
+  followersCount?: number
 }
 
 export type PreviewType = {

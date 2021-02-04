@@ -13,6 +13,7 @@ type ButtonProps = {
 const classes: any = {
   primary: 'bg-primary text-white hover:bg-primary_hover',
   default: 'bg-transparent text-gray5 hover:bg-gray2',
+  success: 'bg-green2 text-white hover:bg-green-500',
   red: 'text-red1',
   blue: 'text-blue2',
   green: 'text-green2',
