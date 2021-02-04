@@ -41,7 +41,9 @@ module.exports = {
   variants: {
     extend: {
       backgroundColor: ['active','group-hover'],
-      opacity: ['disabled']
+      opacity: ['disabled'],
+      borderWidth: ['last'],
+      padding: ['last']
     }
   },
   plugins: [],
