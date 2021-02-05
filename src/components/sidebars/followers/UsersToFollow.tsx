@@ -16,7 +16,7 @@ const UsersToFollow = () => {
       {data?.followersSuggestions.length && (
         <ul>
           {data?.followersSuggestions.map((user: UserType) => {
-            return <SingleUser user={user} />
+            return <SingleUser key={user.id} user={user} />
           })}
         </ul>
       )}

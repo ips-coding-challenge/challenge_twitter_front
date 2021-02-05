@@ -20,7 +20,7 @@ const UserMenu = () => {
       className="flex items-center justify-center relative"
       onClick={() => setShowDropdown((old) => !old)}
     >
-      <Avatar display_name={user?.display_name!} className="mr-3" />
+      <Avatar user={user!} className="mr-3" />
       <div className="hidden cursor-pointer md:flex items-center">
         <div className="mr-4">{user?.display_name}</div>
         <MdArrowDropDown className="text-xl" />

@@ -179,7 +179,7 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
       </h3>
       <hr className="my-2" />
       <div className="flex w-full">
-        <Avatar className="mr-2" display_name={user!.display_name} />
+        <Avatar className="mr-2" user={user!} />
         <div className="w-full">
           <div className="w-full mb-2">
             <textarea

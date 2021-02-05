@@ -6,6 +6,7 @@ export const ME = gql`
       id
       username
       display_name
+      avatar
       email
       created_at
       updated_at

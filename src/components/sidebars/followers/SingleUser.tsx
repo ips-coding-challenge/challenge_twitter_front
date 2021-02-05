@@ -37,7 +37,7 @@ export const SingleUser = ({ user }: SingleUserProps) => {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex">
-          <Avatar className="mr-2" display_name={user.display_name} />
+          <Avatar className="mr-2" user={user} />
           <div>
             <p className="">{user.display_name}</p>
             <p className="text-xs text-gray7">
@@ -60,10 +60,12 @@ export const SingleUser = ({ user }: SingleUserProps) => {
         />
       </div>
       {/* Bio */}
-      {user.bio && <p className="text-gray7 mb-4">{user.bio}</p>}
+      {user.bio && <p className="text-gray7">{user.bio}</p>}
 
       {/* Banner */}
-      {user.banner && <MyImage src={user?.banner!} alt="banner" />}
+      {user.banner && (
+        <MyImage style={{ height: '100px' }} src={user?.banner!} alt="banner" />
+      )}
     </div>
   )
 }

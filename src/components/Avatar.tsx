@@ -1,9 +1,8 @@
-import React from 'react'
+import { UserType } from '../types/types'
 import { avatarInitials } from '../utils/utils'
 
 type AvatarProps = {
-  display_name: string
-  avatar?: string | null
+  user: UserType
   className?: string
   width?: string
   height?: string
@@ -11,16 +10,15 @@ type AvatarProps = {
 }
 
 const Avatar = ({
-  display_name,
-  avatar,
+  user,
   className,
   width = 'w-10',
   height = 'h-10',
   textSize,
 }: AvatarProps) => {
-  return avatar ? (
+  return user.avatar ? (
     <img
-      src={avatar}
+      src={user.avatar}
       className={`${width} ${height} rounded-lg ${className} object-cover`}
       alt="avatar"
     />
@@ -28,7 +26,7 @@ const Avatar = ({
     <div
       className={`${width} ${height} rounded-lg bg-gray5 p-4 text-sm text-white flex justify-center items-center ${className}`}
     >
-      <div className={textSize}>{avatarInitials(display_name)}</div>
+      <div className={textSize}>{avatarInitials(user.display_name)}</div>
     </div>
   )
 }

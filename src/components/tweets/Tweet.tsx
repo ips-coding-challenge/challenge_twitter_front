@@ -97,7 +97,7 @@ const Tweet = ({ tweet }: TweetProps) => {
         <Link to={`/status/${tweet.id}`} className="block">
           {/* Header */}
           <div className="flex items-center">
-            <Avatar className="mr-4" display_name={tweet.user.display_name} />
+            <Avatar className="mr-4" user={tweet.user} />
 
             <div>
               <Link
