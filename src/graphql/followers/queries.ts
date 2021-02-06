@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-export const USERSTOFOLLOW = gql`
+export const USERS_TO_FOLLOW = gql`
   query {
     followersSuggestions {
       id

@@ -17,7 +17,6 @@ export const SingleUser = ({ user }: SingleUserProps) => {
   const [following, setFollowing] = useState(false)
 
   const onClick = async () => {
-    // TODO: add a modal to tell the user that he already follows this user
     if (following) return false
     try {
       setFollowing(true)
@@ -47,7 +46,7 @@ export const SingleUser = ({ user }: SingleUserProps) => {
         </div>
         <Button
           onClick={onClick}
-          text="Follow"
+          text={following ? 'Followed' : 'Follow'}
           variant={following ? 'success' : 'primary'}
           disabled={following}
           icon={
