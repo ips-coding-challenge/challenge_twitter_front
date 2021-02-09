@@ -1,5 +1,10 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { MdBookmarkBorder, MdLoop, MdModeComment } from 'react-icons/md'
+import {
+  MdBookmarkBorder,
+  MdFavorite,
+  MdLoop,
+  MdModeComment,
+} from 'react-icons/md'
 import { useRecoilValue } from 'recoil'
 import { userState } from '../../state/userState'
 import { TweetType } from '../../types/types'
@@ -16,30 +21,18 @@ import BookmarkButton from './actions/BookmarkButton'
 import TweetForm, { TweetTypeEnum } from './TweetForm'
 import { Link } from 'react-router-dom'
 import MyImage from '../MyImage'
+import LikeOrRetweet from './LikeOrRetweet'
 
 type TweetProps = {
   tweet: TweetType
+  showStats?: boolean
 }
 
-const Tweet = ({ tweet }: TweetProps) => {
+const Tweet = ({ tweet, showStats = true }: TweetProps) => {
   const user = useRecoilValue(userState)
 
   const [showCommentForm, setShowCommentForm] = useState(false)
-
-  const showRetweet = () => {
-    let text
-    if (tweet.user.id === user!.id) {
-      text = 'You have retweeted'
-    } else {
-      text = `${tweet.user.display_name} retweeted`
-    }
-    return (
-      <div className="flex items-center text-gray7 text-sm mb-1">
-        <MdLoop className="mr-2" />
-        {text}
-      </div>
-    )
-  }
+  // console.log('tweet', tweet)
 
   const renderParsedTweet = () => {
     let replacedText
@@ -89,10 +82,34 @@ const Tweet = ({ tweet }: TweetProps) => {
     setShowCommentForm((old) => (old = !old))
   }
 
+  const renderLikeOrRetweet = () => {
+    if (!tweet) return null
+    if (tweet.likeAuthor || tweet.retweetAuthor) {
+      return (
+        <LikeOrRetweet
+          icon={tweet.retweetAuthor ? <MdLoop /> : <MdFavorite />}
+          username={
+            tweet.retweetAuthor
+              ? tweet.retweetAuthor.username
+              : tweet.likeAuthor!.username
+          }
+          display_name={
+            tweet.retweetAuthor
+              ? tweet.retweetAuthor.display_name
+              : tweet.likeAuthor!.display_name
+          }
+          text={tweet.retweetAuthor ? ' has retweeted' : ' has liked'}
+        />
+      )
+    } else {
+      return null
+    }
+  }
+
   return (
-    <div>
+    <>
       {/* Retweet */}
-      {tweet.type === 'retweet' ? showRetweet() : ''}
+      {renderLikeOrRetweet()}
       <div className="p-4 shadow bg-white rounded mb-6">
         <Link to={`/status/${tweet.id}`} className="block">
           {/* Header */}
@@ -119,7 +136,8 @@ const Tweet = ({ tweet }: TweetProps) => {
           {tweet.media && <MyImage src={tweet.media.url} />}
 
           {/* Metadata */}
-          <TweetStats id={tweet.id} />
+
+          {showStats && <TweetStats id={tweet.id} />}
         </Link>
         <hr className="my-2" />
         {/* Buttons */}
@@ -147,7 +165,7 @@ const Tweet = ({ tweet }: TweetProps) => {
           />
         )}
       </div>
-    </div>
+    </>
   )
 }
 

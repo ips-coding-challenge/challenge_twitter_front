@@ -5,6 +5,9 @@ export const ADD_TWEET = gql`
   mutation($payload: AddTweetPayload!) {
     addTweet(payload: $payload) {
       ...tweetFragment
+      parent {
+        ...tweetFragment
+      }
     }
   }
   ${TWEET_FRAGMENT}

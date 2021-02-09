@@ -9,7 +9,7 @@ export const tweetsState = atom<TweetType[]>({
 export const singleTweetState = atomFamily<TweetType | undefined, number>({
   key: 'singleTweetState',
   default: selectorFamily<TweetType | undefined, number>({
-    key: 'singleTweetSelector',
+    key: `singleTweetSelector`,
     get: (id: number) => ({ get }) => {
       return get(tweetsState).find((t) => t.id === id)
     },
