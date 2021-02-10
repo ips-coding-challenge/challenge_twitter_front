@@ -45,9 +45,11 @@ export const TWEET_FRAGMENT = gql`
       url
     }
     ...previewFragment
-    isLiked
-    isRetweeted
-    isBookmarked
+    tweetUserInfos {
+      isLiked
+      isRetweeted
+      isBookmarked
+    }
     type
     visibility
     ...userFragment

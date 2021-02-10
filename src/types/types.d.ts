@@ -2,9 +2,7 @@ export type TweetType = {
   id: number
   body: string
   user: UserType
-  isLiked: boolean
-  isRetweeted: boolean
-  isBookmarked: boolean
+  tweetUserInfos?: TweetUserInfosType
   likeAuthor?: LikeOrRetweetAuthorType
   retweetAuthor?: LikeOrRetweetAuthorType
   likesCount: number
@@ -53,4 +51,10 @@ export type MediaType = {
 export type LikeOrRetweetAuthorType = {
   username: string
   display_name: string
+}
+
+export type TweetUserInfosType = {
+  isLiked: boolean
+  isRetweeted: boolean
+  isBookmarked: boolean
 }

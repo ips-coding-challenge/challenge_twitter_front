@@ -21,7 +21,7 @@ export const isLikedState = atomFamily({
   default: selectorFamily({
     key: 'isLikedSelector',
     get: (id: number) => ({ get }) => {
-      return get(singleTweetState(id))?.isLiked
+      return get(singleTweetState(id))?.tweetUserInfos?.isLiked
     },
   }),
 })
@@ -31,7 +31,7 @@ export const isRetweetedState = atomFamily({
   default: selectorFamily({
     key: 'isRetweetedSelector',
     get: (id: number) => ({ get }) => {
-      return get(singleTweetState(id))?.isRetweeted
+      return get(singleTweetState(id))?.tweetUserInfos?.isRetweeted
     },
   }),
 })
@@ -41,7 +41,7 @@ export const isBookmarkedState = atomFamily({
   default: selectorFamily({
     key: 'isBookmarkedSelector',
     get: (id: number) => ({ get }) => {
-      return get(singleTweetState(id))?.isBookmarked
+      return get(singleTweetState(id))?.tweetUserInfos?.isBookmarked
     },
   }),
 })
