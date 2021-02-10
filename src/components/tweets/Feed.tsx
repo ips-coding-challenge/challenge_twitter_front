@@ -5,6 +5,7 @@ import { FEED } from '../../graphql/tweets/queries'
 import { tweetsState } from '../../state/tweetsState'
 import { TweetType } from '../../types/types'
 import BasicLoader from '../loaders/BasicLoader'
+import Comments from './Comments'
 import Tweet from './Tweet'
 import TweetForm from './TweetForm'
 
@@ -24,9 +25,13 @@ const Feed = () => {
       <TweetForm />
       {tweets.length > 0 && (
         <ul>
-          {tweets.map((t: TweetType) => (
-            <Tweet key={t.id} tweet={t} />
-          ))}
+          {tweets.map((t: TweetType) => {
+            if (t.parent !== null) {
+              return <Comments tweet={t} key={t.id} />
+            } else {
+              return <Tweet key={t.id} tweet={t} />
+            }
+          })}
         </ul>
       )}
     </div>
