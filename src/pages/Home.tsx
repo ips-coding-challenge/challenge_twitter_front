@@ -11,8 +11,6 @@ const Home = () => {
         {/* Tweet Column */}
         <div className="container max-w-container flex mx-auto gap-4 p-4 md:p-0 overflow-y-auto">
           <div className="w-full md:w-tweetContainer">
-            {/* Tweet Form */}
-
             {/* Tweet Feed */}
             <Feed />
           </div>
