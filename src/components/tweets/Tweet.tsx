@@ -84,14 +84,16 @@ const Tweet = ({ tweet, showStats = true }: TweetProps) => {
 
   const renderLikeOrRetweet = () => {
     if (!tweet) return null
-    if (tweet.type === 'retweet') {
-      return (
-        <div className="flex text-sm text-gray7 items-center">
-          <MdLoop className="mr-2" />
-          <span>You retweeted</span>
-        </div>
-      )
-    }
+    // if (tweet.type === 'retweet') {
+    //   return (
+    //     <div className="flex text-sm text-gray7 items-center">
+    //       <MdLoop className="mr-2" />
+    //       <span>You retweeted</span>
+    //     </div>
+    //   )
+    // }
+
+    console.log('tweet', tweet.retweetAuthor)
 
     if (tweet.likeAuthor || tweet.retweetAuthor) {
       return (

@@ -25,11 +25,11 @@ const Feed = () => {
       <TweetForm />
       {tweets.length > 0 && (
         <ul>
-          {tweets.map((t: TweetType) => {
+          {tweets.map((t: TweetType, index: number) => {
             if (t.parent !== null) {
-              return <Comments tweet={t} key={t.id} />
+              return <Comments tweet={t} key={`${t.id}_${index}`} />
             } else {
-              return <Tweet key={t.id} tweet={t} />
+              return <Tweet key={`${t.id}_${index}`} tweet={t} />
             }
           })}
         </ul>

@@ -91,8 +91,8 @@ const Profile = () => {
                     <li onClick={() => setFilter('WITH_COMMENTS')}>
                       Tweets & Answers
                     </li>
-                    <li>Media</li>
-                    <li>Like</li>
+                    <li onClick={() => setFilter('ONLY_MEDIA')}>Media</li>
+                    <li onClick={() => setFilter('ONLY_LIKES')}>Like</li>
                   </ul>
                 </div>
 
