@@ -27,6 +27,7 @@ export type UserType = {
   banner?: string
   bio?: string
   followersCount?: number
+  followingsCount?: number
 }
 
 export type PreviewType = {

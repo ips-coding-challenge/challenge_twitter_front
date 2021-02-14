@@ -46,7 +46,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (tweetsData) {
-      setTweets(tweetsData.tweets)
+      setTweets(() => tweetsData.tweets)
     }
   }, [tweetsData])
 
@@ -71,9 +71,15 @@ const Profile = () => {
           {user && (
             <>
               <div className="max-w-container-lg mx-auto">
-                {user.banner && <Banner src={user?.banner} alt="Banner" />}
+                {user.banner ? (
+                  <Banner src={user?.banner} alt="Banner" />
+                ) : (
+                  <div className="h-tweetImage bg-gray-700 w-full"></div>
+                )}
               </div>
-              <UserInfos user={user!} />
+              <div className="container px-4">
+                <UserInfos user={user!} />
+              </div>
             </>
           )}
 
@@ -81,7 +87,7 @@ const Profile = () => {
           {tweetsLoading ? (
             <BasicLoader />
           ) : (
-            <div className="w-full bg-gray1 md:p-4 flex flex-col justify-center items-center overflow-y-auto md:overflow-y-visible">
+            <div className="w-full md:p-4 flex flex-col justify-center items-center overflow-y-auto md:overflow-y-visible">
               {/* Tweet Column */}
               <div className="container max-w-container flex mx-auto gap-4 p-4 md:p-0 overflow-y-auto">
                 {/* Sidebar */}
@@ -100,11 +106,12 @@ const Profile = () => {
                   {/* Tweet Feed */}
                   {tweets && tweets.length > 0 && (
                     <ul>
-                      {tweets.map((t: TweetType) => {
+                      {tweets.map((t: TweetType, index: number) => {
+                        const key = `${t.id}_${index}`
                         if (t.parent !== null) {
-                          return <Comments tweet={t} key={t.id} />
+                          return <Comments tweet={t} key={key} />
                         } else {
-                          return <Tweet key={t.id} tweet={t} />
+                          return <Tweet key={key} tweet={t} />
                         }
                       })}
                     </ul>

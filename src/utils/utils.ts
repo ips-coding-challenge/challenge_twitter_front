@@ -54,9 +54,16 @@ export const formattedDate = (date: string): string => {
   return format(new Date(date), "d MMMM 'at' HH:mm")
 }
 
-export const pluralize = (count: number, str: string): string => {
+export const pluralize = (
+  count: number,
+  str: string,
+  noCount: boolean = false
+): string => {
   if (count > 1) {
     str += 's'
+  }
+  if (noCount) {
+    return str
   }
   return `${count} ${str}`
 }

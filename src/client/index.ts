@@ -19,7 +19,13 @@ const httpLink = new HttpLink({
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Tweet: {
+        keyFields: ['id', 'created_at'],
+      },
+    },
+  }),
 })
 
 export default client

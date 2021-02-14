@@ -9,6 +9,8 @@ export const USER = gql`
       avatar
       banner
       bio
+      followersCount
+      followingsCount
     }
   }
 `
