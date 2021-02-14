@@ -1,9 +1,10 @@
 import { useMutation } from '@apollo/client'
-import React, { ButtonHTMLAttributes, useState } from 'react'
+import React, { ButtonHTMLAttributes, useEffect, useState } from 'react'
 import { MdCheck, MdPersonAdd } from 'react-icons/md'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { TOGGLE_FOLLOW } from '../graphql/followers/mutations'
-import { userState } from '../state/userState'
+import { followersCountState } from '../state/profileState'
+import { followingsState, userState } from '../state/userState'
 import { UserType } from '../types/types'
 import Button, { ButtonProps } from './Button'
 
@@ -13,21 +14,46 @@ type FollowButtonProps = {
 }
 
 const FollowButton = ({ user, className }: FollowButtonProps) => {
-  const [followUser] = useMutation(TOGGLE_FOLLOW)
-  const [following, setFollowing] = useState(false)
+  const [followingsUsers, setFollowingsUsers] = useRecoilState(followingsState)
+  const updateFollowersCount = useSetRecoilState(followersCountState(user.id))
+
+  const [followUser, { loading }] = useMutation(TOGGLE_FOLLOW)
+  const [following, setFollowing] = useState(followingsUsers?.includes(user.id))
 
   const onClick = async () => {
-    if (following) return false
     try {
-      setFollowing(true)
-      await followUser({
+      updateFollowersCount((old: any) => {
+        if (!following) {
+          return old + 1
+        }
+        return old - 1 < 0 ? 0 : old - 1
+      })
+      setFollowing((old) => (old = !old))
+
+      const res = await followUser({
         variables: {
           following_id: user.id,
         },
       })
+      setFollowingsUsers((old: any) => {
+        if (res.data.toggleFollow.includes('followed')) {
+          return old.concat(user.id)
+        } else {
+          const index = followingsUsers?.findIndex((id) => id === user.id)
+
+          if (index && index > -1) {
+            const copy = [...old]
+            copy.splice(index, 1)
+
+            return copy
+          }
+
+          return old
+        }
+      })
     } catch (e) {
       console.log('e', e)
-      setFollowing(false)
+      setFollowing((old) => (old = !old))
     }
   }
   return (
@@ -35,8 +61,8 @@ const FollowButton = ({ user, className }: FollowButtonProps) => {
       onClick={onClick}
       text={following ? 'Followed' : 'Follow'}
       variant={following ? 'success' : 'primary'}
-      disabled={following}
       className={className}
+      disabled={loading}
       icon={
         following ? (
           <MdCheck className="text-white" />

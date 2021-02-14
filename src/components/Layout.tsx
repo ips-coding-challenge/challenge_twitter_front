@@ -14,7 +14,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="flex flex-col h-screen overflow-hidden md:h-full md:overflow-auto">
       <Navbar />
-      <div className="w-full h-full overflow-y-auto md:overflow-y-visible bg-gray1">
+      <div className="w-full h-auto overflow-y-auto md:overflow-y-visible bg-gray1">
         {children}
       </div>
 

@@ -28,6 +28,7 @@ export type UserType = {
   bio?: string
   followersCount?: number
   followingsCount?: number
+  followingsUsersIds?: number[]
 }
 
 export type PreviewType = {

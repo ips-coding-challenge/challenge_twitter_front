@@ -1,7 +1,7 @@
 import { useLazyQuery, useQuery } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import Layout from '../components/Layout'
 import BasicLoader from '../components/loaders/BasicLoader'
 import MyImage from '../components/MyImage'
@@ -77,7 +77,7 @@ const Profile = () => {
                   <div className="h-tweetImage bg-gray-700 w-full"></div>
                 )}
               </div>
-              <div className="container px-4">
+              <div className="max-w-container-lg px-4 mx-auto">
                 <UserInfos user={user!} />
               </div>
             </>

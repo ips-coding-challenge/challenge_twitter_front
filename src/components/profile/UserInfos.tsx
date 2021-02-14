@@ -1,6 +1,7 @@
-import React from 'react'
-import { useRecoilValue } from 'recoil'
-import { userState } from '../../state/userState'
+import React, { useEffect } from 'react'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { followersCountState } from '../../state/profileState'
+import { followingsState, userState } from '../../state/userState'
 import { UserType } from '../../types/types'
 import { pluralize } from '../../utils/utils'
 import Avatar from '../Avatar'
@@ -12,12 +13,20 @@ type UserInfosProps = {
 
 const UserInfos = ({ user }: UserInfosProps) => {
   const connectedUser = useRecoilValue(userState)
+  const [followersCount, setFollowersCount] = useRecoilState(
+    followersCountState(user.id)
+  )
+
+  useEffect(() => {
+    setFollowersCount(user.followersCount!)
+  }, [])
+
   return (
     <div className="relative container max-w-container mx-auto flex flex-col items-center p-6 bg-white rounded-lg shadow -mt-8">
       <div className="relative">
         <Avatar
           user={user}
-          height="w-28"
+          height="h-28"
           width="w-28"
           className="ring-4 ring-white -mt-20"
         />
@@ -36,9 +45,9 @@ const UserInfos = ({ user }: UserInfosProps) => {
           </span>
         </div>
         <div className="">
-          <span className="mr-2 font-semibold">{user.followersCount}</span>
+          <span className="mr-2 font-semibold">{followersCount}</span>
           <span className="text-gray7">
-            {pluralize(user.followersCount!, 'Follower', true)}
+            {pluralize(followersCount!, 'Follower', true)}
           </span>
         </div>
       </div>

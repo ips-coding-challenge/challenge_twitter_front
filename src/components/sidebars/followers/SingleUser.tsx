@@ -6,6 +6,7 @@ import { UserType } from '../../../types/types'
 import { pluralize } from '../../../utils/utils'
 import Avatar from '../../Avatar'
 import Button from '../../Button'
+import FollowButton from '../../FollowButton'
 import MyImage from '../../MyImage'
 
 type SingleUserProps = {
@@ -13,24 +14,6 @@ type SingleUserProps = {
 }
 
 export const SingleUser = ({ user }: SingleUserProps) => {
-  const [followUser] = useMutation(TOGGLE_FOLLOW)
-  const [following, setFollowing] = useState(false)
-
-  const onClick = async () => {
-    if (following) return false
-    try {
-      setFollowing(true)
-      await followUser({
-        variables: {
-          following_id: user.id,
-        },
-      })
-    } catch (e) {
-      console.log('e', e)
-      setFollowing(false)
-    }
-  }
-
   return (
     <div className="my-6 border-b last:border-b-0 pb-6 last:pb-0">
       {/* Header */}
@@ -44,19 +27,7 @@ export const SingleUser = ({ user }: SingleUserProps) => {
             </p>
           </div>
         </div>
-        <Button
-          onClick={onClick}
-          text={following ? 'Followed' : 'Follow'}
-          variant={following ? 'success' : 'primary'}
-          disabled={following}
-          icon={
-            following ? (
-              <MdCheck className="text-white" />
-            ) : (
-              <MdPersonAdd className="text-white" />
-            )
-          }
-        />
+        <FollowButton user={user} />
       </div>
       {/* Bio */}
       {user.bio && <p className="text-gray7">{user.bio}</p>}
