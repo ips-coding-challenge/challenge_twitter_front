@@ -33,9 +33,12 @@ module.exports = {
         menuDropdown: "190px"
       },
       maxWidth: {
-        container: "1120px"
+        container: "1120px",
+        "container-lg": "1440px"
       },
-      
+      screens: {
+        '3xl': '2560px',
+      },
     }
   },
   variants: {

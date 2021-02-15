@@ -6,6 +6,7 @@ import PublicRoute from './components/PublicRoute'
 import { useInitAuth } from './hooks/useInitAuth'
 import Home from './pages/Home'
 import Login from './pages/Login'
+import Profile from './pages/Profile'
 import Register from './pages/Register'
 
 function App() {
@@ -24,6 +25,9 @@ function App() {
         </PublicRoute>
         <PrivateRoute exact path="/">
           <Home />
+        </PrivateRoute>
+        <PrivateRoute path="/users/:username">
+          <Profile />
         </PrivateRoute>
       </Switch>
     </Router>

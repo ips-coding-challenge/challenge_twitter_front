@@ -8,6 +8,7 @@ export const ME = gql`
       display_name
       avatar
       email
+      followingsUsersIds
       created_at
       updated_at
     }

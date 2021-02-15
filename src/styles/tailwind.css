@@ -56,6 +56,18 @@
   @apply text-white text-2xl cursor-pointer hover:text-gray7 transition-colors duration-300;
 }
 
+.profile_link {
+  @apply relative text-gray7 pl-5 my-4 hover:text-primary cursor-pointer;
+}
+
+.profile_link.active {
+  @apply text-primary;
+}
+
+.profile_link.active::before {
+  content: '';
+  @apply absolute left-0 bottom-0 top-0 rounded-tr-lg rounded-br-lg bg-primary w-1;
+}
 
 @keyframes loader {
   0% {

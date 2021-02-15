@@ -27,6 +27,8 @@ export type UserType = {
   banner?: string
   bio?: string
   followersCount?: number
+  followingsCount?: number
+  followingsUsersIds?: number[]
 }
 
 export type PreviewType = {

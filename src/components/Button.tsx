@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from 'react'
 
-type ButtonProps = {
+export type ButtonProps = {
   text: string
   variant: string
   icon?: JSX.Element
