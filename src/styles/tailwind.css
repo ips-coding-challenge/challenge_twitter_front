@@ -57,7 +57,7 @@
 }
 
 .profile_link {
-  @apply relative text-gray7 pl-5 my-4 hover:text-primary;
+  @apply relative text-gray7 pl-5 my-4 hover:text-primary cursor-pointer;
 }
 
 .profile_link.active {

@@ -70,7 +70,7 @@ const Profile = () => {
           {/* Header */}
           {user && (
             <>
-              <div className="max-w-container-lg mx-auto">
+              <div className="3xl:max-w-container-lg mx-auto">
                 {user.banner ? (
                   <Banner src={user?.banner} alt="Banner" />
                 ) : (
@@ -91,7 +91,7 @@ const Profile = () => {
               {/* Tweet Column */}
               <div className="container max-w-container flex flex-col md:flex-row mx-auto gap-6 p-4 md:p-0 overflow-y-auto">
                 {/* Sidebar */}
-                <div className="w-full md:w-sidebarWidth flex-none ">
+                <div className="w-full md:w-sidebarWidth">
                   <ul className="bg-white rounded-lg shadow py-4">
                     <li
                       className={`profile_link ${
@@ -115,7 +115,7 @@ const Profile = () => {
                       }`}
                       onClick={() => setFilter('ONLY_MEDIA')}
                     >
-                      Media
+                      Medias
                     </li>
                     <li
                       className={`profile_link ${
@@ -123,12 +123,12 @@ const Profile = () => {
                       }`}
                       onClick={() => setFilter('ONLY_LIKES')}
                     >
-                      Like
+                      Likes
                     </li>
                   </ul>
                 </div>
 
-                <div className="w-full md:w-tweetContainer">
+                <div className="w-full">
                   {/* Tweet Feed */}
                   {tweets && tweets.length === 0 && (
                     <h5 className="text-gray7 text-2xl text-center mt-2">

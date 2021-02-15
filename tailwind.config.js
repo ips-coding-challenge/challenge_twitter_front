@@ -36,7 +36,9 @@ module.exports = {
         container: "1120px",
         "container-lg": "1440px"
       },
-      
+      screens: {
+        '3xl': '2560px',
+      },
     }
   },
   variants: {
