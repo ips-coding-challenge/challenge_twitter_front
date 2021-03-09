@@ -24,3 +24,26 @@ export const TWEETS = gql`
   }
   ${TWEET_FRAGMENT}
 `
+
+export const TWEET = gql`
+  query($tweet_id: Float!) {
+    tweet(tweet_id: $tweet_id) {
+      ...tweetFragment
+      parent {
+        ...tweetFragment
+      }
+    }
+  }
+  ${TWEET_FRAGMENT}
+`
+export const COMMENTS = gql`
+  query($parent_id: Float!) {
+    comments(parent_id: $parent_id) {
+      ...tweetFragment
+      parent {
+        ...tweetFragment
+      }
+    }
+  }
+  ${TWEET_FRAGMENT}
+`
