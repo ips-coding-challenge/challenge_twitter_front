@@ -53,7 +53,13 @@ const ShowTweet = () => {
         {tweets.length > 0 && (
           <ul>
             {tweets.map((t: TweetType, index: number) => {
-              return <Tweet key={`${t.id}_${index}`} tweet={t} />
+              return (
+                <Tweet
+                  key={`${t.id}_${index}`}
+                  tweet={t}
+                  showCommentMeta={false}
+                />
+              )
             })}
           </ul>
         )}

@@ -27,10 +27,14 @@ import LikeOrRetweet from './LikeOrRetweet'
 type TweetProps = {
   tweet: TweetType
   showStats?: boolean
+  showCommentMeta?: boolean
 }
 
-const Tweet = ({ tweet, showStats = true }: TweetProps) => {
-  const user = useRecoilValue(userState)
+const Tweet = ({
+  tweet,
+  showStats = true,
+  showCommentMeta = true,
+}: TweetProps) => {
   const history = useHistory()
 
   const [showCommentForm, setShowCommentForm] = useState(false)
@@ -90,18 +94,15 @@ const Tweet = ({ tweet, showStats = true }: TweetProps) => {
   const renderLikeOrRetweet = () => {
     if (!tweet) return null
 
-    if (tweet.type === 'comment') {
+    if (tweet.type === 'comment' && showCommentMeta) {
       return (
         <div className="flex text-sm text-gray7 items-center hover:text-blue2">
           <MdComment className="mr-2" />
-          <span>
-            See the original{' '}
-            <Link to={`/status/${tweet.parent?.id}`}>tweet</Link>
-          </span>
+          <Link to={`/status/${tweet.parent?.id}`}>See the original tweet</Link>
         </div>
       )
     }
-    if (tweet.type === 'retweet' && !tweet.retweetAuthor) {
+    if (tweet.type === 'retweet' && tweet.retweetAuthor !== null) {
       return (
         <div className="flex text-sm text-gray7 items-center">
           <MdLoop className="mr-2" />
@@ -133,7 +134,7 @@ const Tweet = ({ tweet, showStats = true }: TweetProps) => {
   }
 
   const goToPage = (page: string) => {
-    history.push(page)
+    history.replace(page)
   }
 
   return (
@@ -153,7 +154,10 @@ const Tweet = ({ tweet, showStats = true }: TweetProps) => {
 
             <div>
               <div
-                onClick={() => goToPage(`/users/${tweet.user.username}`)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  goToPage(`/users/${tweet.user.username}`)
+                }}
                 className="hover:text-primary cursor-pointer"
               >
                 <h4 className="font-bold">{tweet.user.display_name}</h4>
