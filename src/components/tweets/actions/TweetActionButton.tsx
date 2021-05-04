@@ -28,7 +28,10 @@ const TweetActionButton = ({
       text={`${isSth ? activeText : text}`}
       variant={`${isSth ? activeClass : 'default'}`}
       className={`text-lg md:text-sm`}
-      onClick={onClick}
+      onClick={(e) => {
+        e.stopPropagation()
+        onClick ? onClick(e) : null
+      }}
       icon={isSth && activeIcon ? activeIcon : icon}
       alignment="left"
       hideTextOnMobile={true}

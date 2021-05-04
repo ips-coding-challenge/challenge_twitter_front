@@ -83,6 +83,7 @@ const Tweet = ({ tweet, showStats = true }: TweetProps) => {
   }
 
   const toggleCommentForm = (e: any) => {
+    e.stopPropagation()
     setShowCommentForm((old) => (old = !old))
   }
 
@@ -139,8 +140,13 @@ const Tweet = ({ tweet, showStats = true }: TweetProps) => {
     <>
       {/* Retweet */}
       {renderLikeOrRetweet()}
-      <div className="p-4 shadow bg-white rounded mb-6">
-        <div onClick={() => goToPage(`/status/${tweet.id}`)} className="block">
+      <div
+        className="p-4 shadow bg-white rounded mb-6 block border hover:border-blue2 transition-colors duration-200 cursor-pointer"
+        onClick={(e) => {
+          goToPage(`/status/${tweet.id}`)
+        }}
+      >
+        <div>
           {/* Header */}
           <div className="flex items-center">
             <Avatar className="mr-4" user={tweet.user} />

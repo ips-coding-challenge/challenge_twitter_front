@@ -42,7 +42,7 @@ const LikeButton = ({ id }: { id: number }) => {
       isSth={isLiked}
       icon={<MdFavoriteBorder />}
       activeIcon={<MdFavorite />}
-      onClick={() => toggleLike()}
+      onClick={(e) => toggleLike()}
       text="Like"
       activeText="Liked"
       activeClass="red"
