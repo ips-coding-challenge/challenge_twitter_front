@@ -1,6 +1,7 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react'
 import {
   MdBookmarkBorder,
+  MdComment,
   MdFavorite,
   MdLoop,
   MdModeComment,
@@ -19,7 +20,7 @@ import RetweetButton from './actions/RetweetButton'
 import TweetStats from './TweetStats'
 import BookmarkButton from './actions/BookmarkButton'
 import TweetForm, { TweetTypeEnum } from './TweetForm'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import MyImage from '../MyImage'
 import LikeOrRetweet from './LikeOrRetweet'
 
@@ -30,6 +31,7 @@ type TweetProps = {
 
 const Tweet = ({ tweet, showStats = true }: TweetProps) => {
   const user = useRecoilValue(userState)
+  const history = useHistory()
 
   const [showCommentForm, setShowCommentForm] = useState(false)
   // console.log('tweet', tweet)
@@ -47,7 +49,9 @@ const Tweet = ({ tweet, showStats = true }: TweetProps) => {
           match === tweet.preview.url &&
           tweet.media === null
         ) {
-          return <Preview key={tweet.preview.id} preview={tweet.preview} />
+          return (
+            <Preview key={`${tweet.preview.id}_${i}`} preview={tweet.preview} />
+          )
         } else {
           return (
             <a
@@ -84,6 +88,18 @@ const Tweet = ({ tweet, showStats = true }: TweetProps) => {
 
   const renderLikeOrRetweet = () => {
     if (!tweet) return null
+
+    if (tweet.type === 'comment') {
+      return (
+        <div className="flex text-sm text-gray7 items-center hover:text-blue2">
+          <MdComment className="mr-2" />
+          <span>
+            See the original{' '}
+            <Link to={`/status/${tweet.parent?.id}`}>tweet</Link>
+          </span>
+        </div>
+      )
+    }
     if (tweet.type === 'retweet' && !tweet.retweetAuthor) {
       return (
         <div className="flex text-sm text-gray7 items-center">
@@ -115,23 +131,27 @@ const Tweet = ({ tweet, showStats = true }: TweetProps) => {
     }
   }
 
+  const goToPage = (page: string) => {
+    history.push(page)
+  }
+
   return (
     <>
       {/* Retweet */}
       {renderLikeOrRetweet()}
       <div className="p-4 shadow bg-white rounded mb-6">
-        <Link to={`/status/${tweet.id}`} className="block">
+        <div onClick={() => goToPage(`/status/${tweet.id}`)} className="block">
           {/* Header */}
           <div className="flex items-center">
             <Avatar className="mr-4" user={tweet.user} />
 
             <div>
-              <Link
-                to={`/users/${tweet.user.username}`}
-                className="hover:text-primary"
+              <div
+                onClick={() => goToPage(`/users/${tweet.user.username}`)}
+                className="hover:text-primary cursor-pointer"
               >
                 <h4 className="font-bold">{tweet.user.display_name}</h4>
-              </Link>
+              </div>
               <p className="text-gray4 text-xs mt-1">
                 {formattedDate(tweet.created_at)}
               </p>
@@ -147,7 +167,7 @@ const Tweet = ({ tweet, showStats = true }: TweetProps) => {
           {/* Metadata */}
 
           {showStats && <TweetStats id={tweet.id} />}
-        </Link>
+        </div>
         <hr className="my-2" />
         {/* Buttons */}
         <div className="flex justify-around">
