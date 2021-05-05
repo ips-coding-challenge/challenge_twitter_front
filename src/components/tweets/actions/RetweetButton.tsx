@@ -40,7 +40,7 @@ const RetweetButton = ({ id }: { id: number }) => {
       id={id}
       isSth={isRetweeted}
       icon={<MdLoop />}
-      onClick={() => toggleRetweet()}
+      onClick={(e) => toggleRetweet()}
       text="Retweet"
       activeText="Retweeted"
       activeClass="green"

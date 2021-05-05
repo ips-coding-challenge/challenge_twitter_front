@@ -2,7 +2,6 @@ import {
   LazyLoadImage,
   LazyLoadImageProps,
 } from 'react-lazy-load-image-component'
-import 'react-lazy-load-image-component/src/effects/blur.css'
 
 export type MyImageProps = {
   src: string
@@ -15,7 +14,6 @@ const MyImage = ({ src, alt, ...rest }: MyImageProps) => {
       className="h-tweetImage object-cover rounded-lg w-full mt-4"
       src={src}
       alt={alt}
-      effect="blur"
       {...rest}
     />
   )

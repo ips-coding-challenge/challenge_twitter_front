@@ -8,6 +8,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Profile from './pages/Profile'
 import Register from './pages/Register'
+import ShowTweet from './pages/ShowTweet'
 
 function App() {
   const { init } = useInitAuth()
@@ -28,6 +29,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute path="/users/:username">
           <Profile />
+        </PrivateRoute>
+        <PrivateRoute path="/status/:id">
+          <ShowTweet />
         </PrivateRoute>
       </Switch>
     </Router>

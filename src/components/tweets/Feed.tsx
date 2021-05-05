@@ -26,12 +26,7 @@ const Feed = () => {
       {tweets.length > 0 && (
         <ul>
           {tweets.map((t: TweetType, index: number) => {
-            const key = `${t.id}_${index}`
-            if (t.parent !== null) {
-              return <Comments tweet={t} key={key} />
-            } else {
-              return <Tweet key={key} tweet={t} />
-            }
+            return <Tweet key={`${t.id}_${index}`} tweet={t} />
           })}
         </ul>
       )}

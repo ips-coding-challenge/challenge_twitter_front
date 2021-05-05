@@ -46,6 +46,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (tweetsData) {
+      console.log('tweetsData', tweetsData)
       setTweets(() => tweetsData.tweets)
     }
   }, [tweetsData])
@@ -139,11 +140,7 @@ const Profile = () => {
                     <ul>
                       {tweets.map((t: TweetType, index: number) => {
                         const key = `${t.id}_${index}`
-                        if (t.parent !== null) {
-                          return <Comments tweet={t} key={key} />
-                        } else {
-                          return <Tweet key={key} tweet={t} />
-                        }
+                        return <Tweet key={key} tweet={t} />
                       })}
                     </ul>
                   )}

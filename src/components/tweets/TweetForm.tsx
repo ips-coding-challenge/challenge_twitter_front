@@ -1,7 +1,7 @@
 import { ApolloError, useMutation } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import { MdImage, MdPublic } from 'react-icons/md'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { ValidationError } from 'yup'
 
@@ -52,6 +52,8 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
   const setUploadMediaProgress = useSetRecoilState(uploadMediaProgressState)
 
   // Local state
+  const location = useLocation()
+  const { id: tweetParamsId }: any = useParams()
   const [body, setBody] = useState('')
   const [addTweetMutation, { data }] = useMutation(ADD_TWEET)
   // I create a local state for loading instead of using the apollo loading
@@ -147,8 +149,18 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
 
   useEffect(() => {
     if (data) {
+      // Depending of the page I want the comment to be posted on first or last position
       setTweets((old) => {
-        return [data.addTweet].concat(old)
+        if (location.pathname.includes('status')) {
+          // I should check also that the tweet added is a comment from the /status/${id}
+          if (tweetParamsId !== tweet_id) {
+            return old
+          }
+          // Otherwise I should not insert it
+          return old.concat(data.addTweet)
+        } else {
+          return [data.addTweet].concat(old)
+        }
       })
       setBody('')
     }
@@ -167,6 +179,7 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
 
   return (
     <div
+      onClick={(e) => e.stopPropagation()}
       className={`mb-4 p-4 w-full rounded-lg shadow bg-white ${
         type === TweetTypeEnum.COMMENT ? 'mt-4 border border-primary' : ''
       }`}
@@ -215,7 +228,10 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
                   className="hidden"
                   type="file"
                   id="file"
-                  onChange={onMediaChange}
+                  onChange={(e) => {
+                    e.stopPropagation()
+                    onMediaChange(e)
+                  }}
                 />
               </label>
               <div className="text-primary inline-flex items-center">
@@ -227,7 +243,10 @@ const TweetForm = ({ tweet_id, type, onSuccess }: TweetFormProps) => {
               text={type === TweetTypeEnum.COMMENT ? 'Comment' : 'Tweet'}
               variant="primary"
               className="disabled:opacity-30"
-              onClick={addTweet}
+              onClick={(e) => {
+                e.stopPropagation()
+                addTweet()
+              }}
               disabled={
                 loading || (uploadMedia !== null && !uploadMediaFinished)
               }
